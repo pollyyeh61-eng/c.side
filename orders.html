@@ -8,33 +8,31 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; }
-        .order-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .modal-active { transform: translateY(0); }
+        .order-card { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="pb-24">
 
     <header class="p-6 bg-white sticky top-0 z-40 border-b">
         <h1 class="text-2xl font-black text-slate-800">我的行程</h1>
-        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Upcoming Appointments</p>
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">核銷與扣款系統</p>
     </header>
 
-    <main id="order-list" class="p-6 space-y-4">
-        </main>
+    <main id="order-list" class="p-6 space-y-4"></main>
 
     <div id="otp-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-6">
         <div class="bg-white w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl text-center">
             <div class="w-16 h-16 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="shield-check" class="w-8 h-8"></i>
+                <i data-lucide="store" class="w-8 h-8"></i>
             </div>
-            <h3 class="font-bold text-lg text-slate-800">店家服務核銷</h3>
-            <p class="text-xs text-gray-400 mt-2 mb-6">請店家輸入 4 位數 OTP 代碼</p>
+            <h3 class="font-bold text-lg text-slate-800">請店家輸入代碼</h3>
+            <p id="otp-hint" class="text-[10px] text-gray-400 mt-2 mb-6 font-bold uppercase tracking-tighter"></p>
             
-            <input type="tel" id="otp-input" maxlength="4" placeholder="••••" class="w-full text-center text-3xl tracking-[0.5em] font-black p-4 bg-gray-50 rounded-2xl mb-6 outline-none focus:ring-2 focus:ring-rose-400 border-none">
+            <input type="tel" id="otp-input" maxlength="4" placeholder="0000" class="w-full text-center text-3xl tracking-[0.5em] font-black p-4 bg-gray-50 rounded-2xl mb-6 outline-none focus:ring-2 focus:ring-rose-400 border-none">
             
             <div class="flex gap-3">
                 <button onclick="closeOTP()" class="flex-1 py-3 text-sm font-bold text-gray-400">取消</button>
-                <button onclick="confirmVerify()" class="flex-1 py-3 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg">確認扣款</button>
+                <button onclick="confirmVerify()" class="flex-1 py-3 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg">確認核銷</button>
             </div>
         </div>
     </div>
@@ -54,29 +52,24 @@
             const list = document.getElementById('order-list');
             
             if (orders.length === 0) {
-                list.innerHTML = `<div class="text-center py-20"><i data-lucide="calendar-x" class="w-12 h-12 text-gray-200 mx-auto mb-4"></i><p class="text-gray-400 text-sm">目前沒有任何預約行程</p></div>`;
+                list.innerHTML = `<div class="text-center py-20 text-gray-300"><p>尚無行程</p></div>`;
             } else {
                 list.innerHTML = orders.map((order, index) => `
-                    <div class="order-card bg-white rounded-[2rem] p-5 shadow-sm border border-gray-50 ${order.status === '已完工' ? 'opacity-60' : ''}">
+                    <div class="order-card bg-white rounded-[2rem] p-5 shadow-sm border border-gray-50">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <span class="text-[9px] font-black bg-rose-50 text-rose-500 px-2 py-1 rounded uppercase tracking-tighter">${order.id}</span>
+                                <span class="text-[9px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded">SHOP ID: ${order.shopId}</span>
                                 <h3 class="font-bold text-slate-800 mt-2">${order.shop}</h3>
                                 <p class="text-xs text-gray-400">${order.service}</p>
                             </div>
-                            <div class="text-right">
-                                <p class="font-black text-slate-800">$${order.price}</p>
-                                <span class="text-[10px] font-bold ${order.status === '已完工' ? 'text-emerald-500' : 'text-rose-400'}">${order.status}</span>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4 py-3 border-t border-dashed border-gray-100 mb-4">
-                            <div class="flex items-center gap-1 text-[11px] text-gray-500 font-bold"><i data-lucide="calendar" class="w-3 h-3"></i> ${order.date}</div>
-                            <div class="flex items-center gap-1 text-[11px] text-gray-500 font-bold"><i data-lucide="clock" class="w-3 h-3"></i> ${order.time}</div>
+                            <p class="font-black text-slate-800">$${order.price}</p>
                         </div>
                         ${order.status === '待核銷' ? `
-                            <button onclick="openOTP(${index})" class="w-full py-3 bg-rose-500 text-white rounded-xl text-xs font-bold shadow-md active:scale-95 transition-all">店家現場核銷</button>
+                            <button onclick="openOTP(${index})" class="w-full py-3 bg-rose-500 text-white rounded-xl text-xs font-bold shadow-md">店家現場核銷</button>
                         ` : `
-                            <button disabled class="w-full py-3 bg-gray-100 text-gray-400 rounded-xl text-xs font-bold">服務已完成</button>
+                            <div class="flex items-center justify-center gap-2 py-3 bg-emerald-50 text-emerald-500 rounded-xl text-xs font-bold">
+                                <i data-lucide="check-circle" class="w-4 h-4"></i> 已完成支付
+                            </div>
                         `}
                     </div>
                 `).join('');
@@ -84,9 +77,10 @@
             lucide.createIcons();
         }
 
-        // --- 核銷邏輯 ---
         function openOTP(index) {
             currentOrderIndex = index;
+            const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+            document.getElementById('otp-hint').innerText = `請輸入店家 ${orders[index].shop} 的 4 位數代碼`;
             document.getElementById('otp-modal').classList.remove('hidden');
         }
 
@@ -96,39 +90,43 @@
         }
 
         function confirmVerify() {
-            const otp = document.getElementById('otp-input').value;
+            const inputOtp = document.getElementById('otp-input').value;
             const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
             const order = orders[currentOrderIndex];
             let userBal = parseInt(localStorage.getItem('user_bal') || '0');
 
-            if (otp === "1234") { // 預設 OTP
+            // 這裡的核心邏輯：輸入的 OTP 必須等於訂單中的 shopId
+            if (inputOtp === order.shopId) { 
                 if (userBal >= order.price) {
-                    // 1. 扣款
                     userBal -= order.price;
                     localStorage.setItem('user_bal', userBal);
 
-                    // 2. 更新訂單狀態
+                    // 店家對帳邏輯 (模擬金額流向店家)
+                    let shopVault = JSON.parse(localStorage.getItem('shop_vault') || '{}');
+                    shopVault[order.shopId] = (shopVault[order.shopId] || 0) + order.price;
+                    localStorage.setItem('shop_vault', JSON.stringify(shopVault));
+
                     order.status = "已完工";
                     localStorage.setItem('my_orders', JSON.stringify(orders));
 
-                    // 3. 寫入 profile.html 的歷史紀錄
+                    // 寫入消費明細
                     let history = JSON.parse(localStorage.getItem('pay_history') || '[]');
                     history.unshift({
-                        name: `服務消費: ${order.shop}`,
+                        name: `支付給店家 ${order.shop} (#${order.shopId})`,
                         amount: order.price,
                         type: "minus",
                         date: new Date().toLocaleDateString()
                     });
                     localStorage.setItem('pay_history', JSON.stringify(history));
 
-                    alert("驗證成功！扣款 $" + order.price + "，服務完成。");
+                    alert(`核銷成功！金額已轉入店家 ${order.shopId} 帳戶。`);
                     closeOTP();
                     renderOrders();
                 } else {
-                    alert("餘額不足，請先至會員中心儲值！");
+                    alert("餘額不足，請先儲值！");
                 }
             } else {
-                alert("OTP 代碼錯誤，請詢問店家專屬代碼。");
+                alert("店家代碼錯誤！核銷失敗。");
             }
         }
 
