@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美業入口平台 | 商家與客戶雙端系統</title>
+    <title>美業入口平台 | 三層式預約導流系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -12,80 +12,71 @@
         .page { display: none; }
         .page.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        #map { width: 100%; height: 250px; border-radius: 20px; margin-top: 10px; }
+        #map { width: 100%; height: 250px; border-radius: 20px; }
     </style>
 </head>
 <body class="bg-gray-50 pb-20">
 
     <div id="page-home" class="page active">
-        <header class="bg-white p-4 sticky top-0 z-50 shadow-sm">
-            <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center text-rose-500 cursor-pointer" onclick="toggleMapView()">
-                    <i data-lucide="map" class="w-5 h-5 mr-1"></i>
-                    <span id="map-btn-text" class="font-bold text-sm">開啟地圖搜尋</span>
-                </div>
-                <h1 class="text-sm font-black text-gray-800 tracking-tighter">美業入口平台</h1>
+        <header class="bg-white p-4 sticky top-0 z-50 shadow-sm flex justify-between items-center">
+            <div class="flex items-center text-rose-500 cursor-pointer" onclick="toggleMapView()">
+                <i data-lucide="map" class="w-5 h-5 mr-1"></i>
+                <span class="font-bold text-sm">地圖探索</span>
             </div>
-            <div class="relative">
-                <input type="text" placeholder="搜尋：美髮、美甲、SPA..." class="w-full bg-gray-100 rounded-full py-2 px-10 focus:outline-none focus:ring-2 focus:ring-rose-300">
-                <i data-lucide="search" class="absolute left-3 top-2.5 w-5 h-5 text-gray-400"></i>
-            </div>
+            <h1 class="text-sm font-black text-gray-800">美業入口平台</h1>
+            <i data-lucide="search" class="w-5 h-5 text-gray-400"></i>
         </header>
-        <section id="map-container" class="px-4 hidden"><div id="map"></div></section>
-        <section class="p-4 flex gap-6 overflow-x-auto no-scrollbar bg-white">
-            <div class="flex flex-col items-center min-w-[60px]"><div class="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-500 mb-1 shadow-sm"><i data-lucide="scissors"></i></div><span class="text-[10px]">美髮</span></div>
-            <div class="flex flex-col items-center min-w-[60px]"><div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-500 mb-1 shadow-sm"><i data-lucide="sparkles"></i></div><span class="text-[10px]">美甲</span></div>
-            <div class="flex flex-col items-center min-w-[60px]"><div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-500 mb-1 shadow-sm"><i data-lucide="waves"></i></div><span class="text-[10px]">SPA</span></div>
-        </section>
-        <main class="p-4 space-y-4" id="shop-list-container"></main>
+        <section id="map-container" class="px-4 hidden py-2"><div id="map"></div></section>
+        <main class="p-4 space-y-4" id="shop-list-container">
+            </main>
     </div>
 
-    <div id="page-orders" class="page">
-        <header class="bg-white p-4 border-b font-bold text-center">我的預約行程</header>
-        <div id="order-list" class="p-4 space-y-4 text-center py-20 text-gray-400">登入後即可查看行程</div>
-    </div>
-
-    <div id="page-profile" class="page">
-        <div class="bg-rose-500 p-8 text-white rounded-b-[40px]">
-            <h2 id="display-phone" class="font-bold text-xl mb-4">訪客登入</h2>
-            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 flex justify-between items-center">
-                <div><p class="text-[10px] opacity-70">儲值金餘額</p><p id="display-balance" class="text-2xl font-black">$ 0</p></div>
-                <button onclick="simulateTopUp()" class="bg-white text-rose-500 px-4 py-2 rounded-xl text-sm font-bold">儲值</button>
+    <div id="page-shop-detail" class="page bg-white min-h-screen">
+        <nav class="p-4 flex items-center border-b sticky top-0 bg-white z-50">
+            <button onclick="navigateTo('page-home')"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+            <span id="detail-title" class="ml-4 font-bold text-lg">店家介紹</span>
+        </nav>
+        <div class="p-6 space-y-6">
+            <div class="h-48 bg-slate-200 rounded-3xl overflow-hidden shadow-inner">
+                <img id="detail-img" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600" class="w-full h-full object-cover">
             </div>
-        </div>
-        <div class="p-6 space-y-4">
-            <button onclick="phoneLogin()" id="login-btn" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold">手機註冊/登入</button>
-            <button onclick="navigateTo('page-admin-login')" class="w-full border-2 border-slate-200 text-slate-500 py-4 rounded-2xl font-bold italic">我是店家主，登入管理後台</button>
-        </div>
-    </div>
-
-    <div id="page-admin-login" class="page">
-        <div class="p-10 text-center">
-            <h2 class="text-2xl font-black text-slate-800 mb-2">店家管理登入</h2>
-            <p class="text-gray-400 text-sm mb-8">請輸入您的店家代碼進入管理模式</p>
-            <input type="password" id="admin-code" placeholder="請輸入代碼 (如: 001)" class="w-full border-b-2 border-slate-200 p-4 text-center text-2xl tracking-widest outline-none focus:border-rose-500 transition">
-            <button onclick="handleAdminLogin()" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold mt-8">進入門面管理</button>
-        </div>
-    </div>
-
-    <div id="page-admin-dashboard" class="page bg-slate-100 min-h-screen pb-20">
-        <header class="bg-white p-4 flex justify-between items-center shadow-sm">
-            <span id="current-admin-shop" class="font-bold text-rose-500">店家名稱</span>
-            <button onclick="navigateTo('page-home')" class="text-xs bg-slate-100 px-3 py-1 rounded-full">切換回客端</button>
-        </header>
-        <div class="p-4 space-y-6">
-            <div class="bg-white p-6 rounded-3xl shadow-sm">
-                <h3 class="font-bold mb-4">門面資訊編輯</h3>
-                <div class="space-y-4">
-                    <input type="text" id="edit-shop-name" placeholder="更改店名" class="w-full p-3 bg-gray-50 rounded-xl border">
-                    <textarea id="edit-shop-desc" placeholder="店家簡介" class="w-full p-3 bg-gray-50 rounded-xl border"></textarea>
-                    <button onclick="saveShopInfo()" class="w-full bg-emerald-500 text-white py-3 rounded-xl font-bold">儲存並發佈</button>
+            <div>
+                <h2 id="detail-name" class="text-2xl font-black text-slate-800">店家名稱</h2>
+                <div class="flex gap-2 mt-2">
+                    <span class="text-[10px] bg-rose-50 text-rose-500 px-2 py-0.5 rounded font-bold">優質認證</span>
+                    <span class="text-[10px] bg-gray-50 text-gray-500 px-2 py-0.5 rounded font-bold">提供儲值金優惠</span>
                 </div>
             </div>
-            <div class="bg-white p-6 rounded-3xl shadow-sm">
-                <h3 class="font-bold mb-4 italic">今日預約管理</h3>
-                <div id="admin-order-list" class="text-xs text-gray-400">目前尚無預約...</div>
+            <p id="detail-desc" class="text-gray-500 leading-relaxed text-sm">
+                這裡顯示的是店家自己經營的簡介與特色內容...
+            </p>
+            <div class="pt-6">
+                <h3 class="font-bold mb-4 flex items-center"><i data-lucide="star" class="w-4 h-4 mr-2 text-yellow-400"></i> 服務清單</h3>
+                <div class="space-y-3" id="service-list">
+                    </div>
             </div>
+        </div>
+        <div class="fixed bottom-0 p-4 bg-white border-t w-full">
+            <button onclick="navigateTo('page-booking')" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-rose-100">立即預約服務</button>
+        </div>
+    </div>
+
+    <div id="page-booking" class="page bg-slate-50 min-h-screen">
+        <nav class="p-4 flex items-center border-b bg-white">
+            <button onclick="navigateTo('page-shop-detail')"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+            <span class="ml-4 font-bold">選擇時段</span>
+        </nav>
+        <div class="p-6">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 mb-6">
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">選擇日期</label>
+                <input type="date" class="w-full text-lg font-bold outline-none">
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+                <button class="bg-white py-4 rounded-xl text-sm font-bold border hover:border-rose-500 hover:text-rose-500 transition">10:00</button>
+                <button class="bg-white py-4 rounded-xl text-sm font-bold border hover:border-rose-500 hover:text-rose-500 transition">14:00</button>
+                <button class="bg-white py-4 rounded-xl text-sm font-bold border hover:border-rose-500 hover:text-rose-500 transition">16:30</button>
+            </div>
+            <button onclick="submitBooking()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold mt-10 shadow-xl">確認並完成預約</button>
         </div>
     </div>
 
@@ -116,57 +107,47 @@
         const auth = getAuth(app);
         lucide.createIcons();
 
-        // 頁面控制
-        window.navigateTo = (id) => {
+        // 頁面跳轉與隱藏導覽列邏輯
+        window.navigateTo = (id, data = null) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.getElementById('bottom-nav').style.display = (id.includes('admin')) ? 'none' : 'flex';
+            
+            // 只有首頁、行程、個人中心顯示底部導覽
+            const mainTabs = ['page-home', 'page-orders', 'page-profile'];
+            document.getElementById('bottom-nav').style.display = mainTabs.includes(id) ? 'flex' : 'none';
+
+            if(id === 'page-shop-detail' && data) {
+                document.getElementById('detail-name').innerText = data.name;
+                document.getElementById('detail-desc').innerText = data.desc;
+            }
+            window.scrollTo(0,0);
         };
 
-        // 店家代碼對照表 (分權核心)
-        const adminMap = { "001": "A店髮藝", "002": "B店美甲", "003": "C店SPA" };
-        window.handleAdminLogin = () => {
-            const code = document.getElementById('admin-code').value;
-            if (adminMap[code]) {
-                alert(`歡迎進入 ${adminMap[code]} 管理系統`);
-                document.getElementById('current-admin-shop').innerText = adminMap[code];
-                document.getElementById('edit-shop-name').value = adminMap[code];
-                navigateTo('page-admin-dashboard');
-            } else { alert("錯誤的店家代碼！"); }
+        // 店家資料 (分權核心)
+        const shops = {
+            "001": { name: "A店 · 時尚髮藝", desc: "台北頂級美髮沙龍，擁有專業設計師團隊...", services: ["洗剪專案 $800", "專業染髮 $2500"] },
+            "002": { name: "B店 · 精緻美甲", desc: "日式光療專業服務，讓您的雙手煥然一新...", services: ["單色光療 $900", "法式美甲 $1200"] },
+            "003": { name: "C店 · 舒活SPA", desc: "城市中的心靈綠洲，深層放鬆精油按摩...", services: ["全身按摩 $1800", "足底舒壓 $800"] }
         };
+
+        // 渲染首頁列表 (第一層)
+        document.getElementById('shop-list-container').innerHTML = Object.entries(shops).map(([code, info]) => `
+            <div onclick="navigateTo('page-shop-detail', {name:'${info.name}', desc:'${info.desc}'})" class="bg-white p-4 rounded-3xl flex justify-between items-center shadow-sm border border-transparent hover:border-rose-200 transition">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center font-bold text-slate-300">LOGO</div>
+                    <div><h3 class="font-bold text-slate-800">${info.name}</h3><p class="text-[10px] text-gray-400">點擊查看環境與服務內容</p></div>
+                </div>
+                <i data-lucide="chevron-right" class="w-5 h-5 text-gray-300"></i>
+            </div>
+        `).join('');
 
         // 地圖切換
         let map;
         window.toggleMapView = () => {
             const container = document.getElementById('map-container');
             if(container.classList.toggle('hidden')) return;
-            if(!map) map = new google.maps.Map(document.getElementById("map"), { zoom: 15, center: {lat: 25.03, lng: 121.56}, disableDefaultUI: true });
+            if(!map) map = new google.maps.Map(document.getElementById("map"), { zoom: 15, center: {lat: 25.0339, lng: 121.5644}, disableDefaultUI: true });
         };
-
-        // 用戶儲值與行程讀取
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                document.getElementById('display-phone').innerText = user.phoneNumber;
-                // 儲值金同步
-                const uRef = doc(db, "users", user.uid);
-                onSnapshot(uRef, (s) => document.getElementById('display-balance').innerText = `$ ${s.data()?.balance || 0}`);
-                // 行程頁同步
-                const q = query(collection(db, "bookings"), where("userId", "==", user.uid));
-                onSnapshot(q, (sn) => {
-                    const list = document.getElementById('order-list');
-                    if(sn.empty) { list.innerText = "暫無行程"; return; }
-                    list.innerHTML = sn.docs.map(d => `<div class="bg-white p-4 rounded-xl shadow-sm text-left"><b>${d.data().shopName}</b><p class="text-xs">${d.data().date}</p></div>`).join('');
-                });
-            }
-        });
-
-        // 初始化客端店家列表
-        document.getElementById('shop-list-container').innerHTML = Object.values(adminMap).map(name => `
-            <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm">
-                <div><h3 class="font-bold text-gray-800">${name}</h3><p class="text-[10px] text-gray-400">目前可預約時段：10:00 - 18:00</p></div>
-                <button class="bg-rose-500 text-white text-xs px-4 py-2 rounded-lg font-bold">進入預約</button>
-            </div>
-        `).join('');
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </body>
