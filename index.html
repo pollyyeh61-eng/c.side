@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美業入口平台 | 您的美感生活地圖</title>
+    <title>美業平台入口・你的美感生活</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -17,129 +17,172 @@
 <body class="bg-gray-50 pb-20">
 
     <div id="page-home" class="page active">
-        <header class="bg-white p-4 sticky top-0 z-50">
+        <header class="bg-white p-4 sticky top-0 z-50 shadow-sm">
             <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center text-rose-500 font-bold text-sm">
-                    <i data-lucide="map-pin" class="w-4 h-4 mr-1"></i>
-                    點擊開啟地圖搜尋
+                <div class="text-rose-500 font-bold text-sm flex items-center">
+                    <i data-lucide="sparkles" class="w-4 h-4 mr-1"></i> 附近美業推薦
                 </div>
-                <span class="text-xs text-gray-400 font-bold">美業入口平台</span>
+                <span class="text-[10px] text-gray-300">美業入口平台</span>
             </div>
             <div class="relative">
-                <input type="text" placeholder="搜尋：美髮、美甲、SPA、醫美..." class="w-full bg-gray-100 rounded-full py-2.5 px-10 text-sm focus:outline-none focus:ring-1 focus:ring-rose-300">
-                <i data-lucide="search" class="absolute left-3 top-3 w-4 h-4 text-gray-400"></i>
+                <input type="text" placeholder="搜尋：美髮、美甲、SPA..." class="w-full bg-gray-100 rounded-full py-2 px-10 text-sm focus:outline-none">
+                <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
             </div>
         </header>
 
-        <section class="p-4 flex justify-around bg-white border-b border-gray-100">
-            <div class="flex flex-col items-center"><div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-400 mb-1"><i data-lucide="scissors"></i></div><span class="text-xs font-bold text-gray-600">美髮</span></div>
-            <div class="flex flex-col items-center"><div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-400 mb-1"><i data-lucide="sparkles"></i></div><span class="text-xs font-bold text-gray-600">美甲</span></div>
-            <div class="flex flex-col items-center"><div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-400 mb-1"><i data-lucide="waves"></i></div><span class="text-xs font-bold text-gray-600">SPA</span></div>
-            <div class="flex flex-col items-center"><div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-400 mb-1"><i data-lucide="heart-pulse"></i></div><span class="text-xs font-bold text-gray-600">醫美</span></div>
+        <section class="p-4 flex justify-between bg-white border-b overflow-x-auto no-scrollbar">
+            <div class="flex flex-col items-center min-w-[70px]"><div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-400 mb-1"><i data-lucide="scissors"></i></div><span class="text-[10px] font-bold">美髮</span></div>
+            <div class="flex flex-col items-center min-w-[70px]"><div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-400 mb-1"><i data-lucide="sparkles"></i></div><span class="text-[10px] font-bold">美甲</span></div>
+            <div class="flex flex-col items-center min-w-[70px]"><div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-400 mb-1"><i data-lucide="waves"></i></div><span class="text-[10px] font-bold">SPA</span></div>
+            <div class="flex flex-col items-center min-w-[70px]"><div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-400 mb-1"><i data-lucide="heart-pulse"></i></div><span class="text-[10px] font-bold">醫美</span></div>
         </section>
 
-        <main class="p-4 space-y-4">
-            <h2 class="font-bold text-gray-800 text-lg">附近美業推薦</h2>
-            <div id="shop-list-container" class="space-y-4">
-                </div>
-        </main>
+        <main class="p-4 space-y-4" id="shop-list-container"></main>
     </div>
 
     <div id="page-shop-detail" class="page bg-white min-h-screen">
         <nav class="p-4 flex items-center border-b sticky top-0 bg-white z-50">
-            <button onclick="navigateTo('page-home')"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-            <span id="detail-title" class="ml-4 font-bold text-lg text-gray-800">店家介紹</span>
+            <button onclick="navigateTo('page-home')"><i data-lucide="arrow-left" class="w-6 h-6"></i></button>
+            <span class="ml-4 font-bold text-lg">店家空間與服務</span>
         </nav>
-        <div class="p-6 space-y-4">
-            <img id="detail-img" src="" class="w-full h-56 object-cover rounded-3xl shadow-sm">
-            <h2 id="detail-name" class="text-2xl font-black text-gray-800"></h2>
-            <p id="detail-desc" class="text-gray-500 text-sm leading-relaxed"></p>
+        <div class="p-5 space-y-6 pb-32">
+            <img id="detail-img" src="" class="w-full h-64 object-cover rounded-[2.5rem] shadow-sm">
+            
+            <div class="space-y-2">
+                <h2 id="detail-name" class="text-2xl font-black text-gray-800"></h2>
+                <div class="flex gap-2"><span class="bg-rose-50 text-rose-500 text-[10px] px-2 py-1 rounded-md font-bold">官方認證</span></div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-3xl">
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i data-lucide="list-checks" class="w-4 h-4 mr-2 text-rose-400"></i> 服務項目</h3>
+                <ul id="detail-services" class="space-y-2 text-sm text-gray-600"></ul>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-3xl">
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i data-lucide="package" class="w-4 h-4 mr-2 text-rose-400"></i> 使用產品</h3>
+                <p id="detail-products" class="text-sm text-gray-500 leading-relaxed"></p>
+            </div>
         </div>
-        <div class="fixed bottom-0 p-4 bg-white border-t w-full flex gap-3">
-            <button onclick="navigateTo('page-booking')" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-rose-100">立即預約服務</button>
+        
+        <div class="fixed bottom-0 p-4 bg-white/80 backdrop-blur-md border-t w-full">
+            <a id="booking-link" href="#" target="_blank" class="block w-full bg-rose-500 text-white py-4 rounded-2xl font-bold text-center shadow-lg shadow-rose-100">立即前往預約</a>
+        </div>
+    </div>
+
+    <div id="page-orders" class="page"><header class="p-4 bg-white border-b font-bold text-center">行程預約</header><div id="order-list" class="p-10 text-center text-gray-300">目前無預約行程</div></div>
+    
+    <div id="page-profile" class="page">
+        <div class="bg-rose-500 p-8 text-white rounded-b-[40px] shadow-lg">
+            <h2 class="font-bold text-xl mb-4">會員中心</h2>
+            <div class="bg-white/10 backdrop-blur rounded-2xl p-4 flex justify-between items-center">
+                <div><p class="text-[10px] opacity-70">儲值餘額</p><p class="text-2xl font-black">$ 0</p></div>
+                <button class="bg-white text-rose-500 px-4 py-2 rounded-xl text-sm font-bold">儲值</button>
+            </div>
+        </div>
+        <div class="p-6"><button class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold">手機登入 / 註冊</button></div>
+    </div>
+
+    <div id="page-admin-center" class="page bg-slate-50 min-h-screen">
+        <header class="p-6 bg-white border-b"><h2 class="font-black text-2xl text-slate-800">管理中心</h2><p class="text-xs text-gray-400">店家與平台管理入口</p></header>
+        <div id="admin-login-box" class="p-6">
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                <label class="block text-center text-gray-400 text-sm mb-4">請輸入管理代碼</label>
+                <input type="password" id="admin-code" class="w-full text-center text-3xl tracking-[1rem] border-b-2 py-2 outline-none focus:border-rose-400 transition">
+                <button onclick="handleAdminLogin()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold mt-8 shadow-xl">驗證登入</button>
+            </div>
+        </div>
+        <div id="admin-dashboard" class="p-4 hidden space-y-4">
+            <div id="super-admin-view" class="hidden space-y-4">
+                <h3 class="font-bold text-rose-500">平台總覽 (0000)</h3>
+                <div id="all-shops-list"></div>
+            </div>
+            <div id="shop-admin-view" class="hidden bg-white p-6 rounded-3xl">
+                <h3 id="admin-shop-name" class="font-bold mb-4"></h3>
+                <button class="w-full bg-rose-500 text-white py-3 rounded-xl">編輯門面資訊</button>
+                <button onclick="location.reload()" class="w-full mt-2 text-gray-400 text-xs">退出管理</button>
+            </div>
         </div>
     </div>
 
     <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
-        <button onclick="navigateTo('page-home')" class="nav-item text-rose-500 flex flex-col items-center" data-target="page-home">
-            <i data-lucide="home" class="w-6 h-6"></i><span class="text-[10px] mt-1 font-bold">探索</span>
-        </button>
-        <button onclick="navigateTo('page-orders')" class="nav-item text-gray-400 flex flex-col items-center" data-target="page-orders">
-            <i data-lucide="calendar" class="w-6 h-6"></i><span class="text-[10px] mt-1 font-bold">行程</span>
-        </button>
-        <button onclick="navigateTo('page-profile')" class="nav-item text-gray-400 flex flex-col items-center" data-target="page-profile">
-            <i data-lucide="user" class="w-6 h-6"></i><span class="text-[10px] mt-1 font-bold">我的</span>
-        </button>
+        <button onclick="navigateTo('page-home')" class="nav-item text-rose-500" data-target="page-home"><i data-lucide="home" class="w-6 h-6"></i><span class="text-[10px] block font-bold">探索</span></button>
+        <button onclick="navigateTo('page-orders')" class="nav-item text-gray-400" data-target="page-orders"><i data-lucide="calendar" class="w-6 h-6"></i><span class="text-[10px] block font-bold">行程</span></button>
+        <button onclick="navigateTo('page-profile')" class="nav-item text-gray-400" data-target="page-profile"><i data-lucide="user" class="w-6 h-6"></i><span class="text-[10px] block font-bold">我的</span></button>
+        <button onclick="navigateTo('page-admin-center')" class="nav-item text-gray-400" data-target="page-admin-center"><i data-lucide="settings" class="w-6 h-6"></i><span class="text-[10px] block font-bold">管理</span></button>
     </nav>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        // ... 其他 Firebase 引入保持不變 ...
-
         lucide.createIcons();
 
-        // 頁面切換
         window.navigateTo = (id, data = null) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            const mainTabs = ['page-home', 'page-orders', 'page-profile'];
-            document.getElementById('bottom-nav').style.display = mainTabs.includes(id) ? 'flex' : 'none';
             
             if(id === 'page-shop-detail' && data) {
                 document.getElementById('detail-name').innerText = data.name;
-                document.getElementById('detail-desc').innerText = data.desc;
                 document.getElementById('detail-img').src = data.img;
+                document.getElementById('detail-products').innerText = data.products;
+                document.getElementById('booking-link').href = data.url; // 設定預約連結
+                
+                const sList = document.getElementById('detail-services');
+                sList.innerHTML = data.services.map(s => `<li class="flex justify-between border-b border-gray-100 pb-1"><span>${s.n}</span><span class="font-bold text-rose-400">${s.p}</span></li>`).join('');
             }
-            window.scrollTo(0,0);
+            
+            // 更新導航高亮
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                const isActive = btn.dataset.target === id;
+                btn.classList.toggle('text-rose-500', isActive);
+                btn.classList.toggle('text-gray-400', !isActive);
+            });
         };
 
-        // 恢復「生活感」店家資料與清單渲染
         const shops = {
             "001": { 
                 name: "Holy Hair Salon", 
-                cat: "美髮", 
-                dist: "0.5km", 
-                star: "5", 
-                img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400",
-                desc: "專業美髮設計，給您最優質的染剪體驗。" 
+                img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600",
+                services: [{n:"韓系氣墊燙",p:"$3,200"}, {n:"專業結構護理",p:"$1,500"}],
+                products: "使用日本資生堂 (Shiseido) 專業髮品與 L'Oreal 染劑，確保髮質光澤。",
+                url: "https://example.com/booking-001" // 預約連結
             },
             "002": { 
                 name: "靜謐 SPA 會館", 
-                cat: "SPA", 
-                dist: "2.1km", 
-                star: "4.8", 
-                img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400",
-                desc: "城市中的放鬆角落，專業精油按摩。" 
+                img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600",
+                services: [{n:"深層組織按摩",p:"$1,800"}, {n:"瑞典式放鬆",p:"$2,200"}],
+                products: "採用法國歐舒丹 (L'Occitane) 頂級精油，溫和不刺激。",
+                url: "https://example.com/booking-002"
             }
         };
 
+        window.handleAdminLogin = () => {
+            const code = document.getElementById('admin-code').value;
+            document.getElementById('admin-login-box').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            
+            if(code === "0000") {
+                document.getElementById('super-admin-view').classList.remove('hidden');
+                document.getElementById('all-shops-list').innerHTML = Object.values(shops).map(s => `<div class="p-3 bg-white mb-2 rounded-xl text-xs font-bold">${s.name}</div>`).join('');
+            } else if(shops[code]) {
+                document.getElementById('shop-admin-view').classList.remove('hidden');
+                document.getElementById('admin-shop-name').innerText = shops[code].name + " 控制台";
+            } else {
+                alert("錯誤代碼"); location.reload();
+            }
+        };
+
+        // 渲染首頁卡片
         document.getElementById('shop-list-container').innerHTML = Object.entries(shops).map(([code, info]) => `
-            <div onclick="navigateTo('page-shop-detail', {name:'${info.name}', desc:'${info.desc}', img:'${info.img}'})" 
+            <div onclick="navigateTo('page-shop-detail', ${JSON.stringify(info).replace(/"/g, '&quot;')})" 
                  class="bg-white p-3 rounded-[2rem] flex gap-4 shadow-sm border border-gray-50 active:scale-95 transition">
                 <img src="${info.img}" class="w-24 h-24 rounded-2xl object-cover">
-                <div class="flex-1 flex flex-col justify-between py-1">
-                    <div>
-                        <div class="flex justify-between items-start">
-                            <h3 class="font-bold text-gray-800">${info.name}</h3>
-                            <span class="text-rose-500 text-xs font-bold flex items-center">★ ${info.star}</span>
-                        </div>
-                        <p class="text-xs text-gray-400 mt-0.5">${info.cat} · 距離 ${info.dist}</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <span class="text-[10px] bg-rose-50 text-rose-500 px-2.5 py-1 rounded-full font-bold">可儲值</span>
-                        <span class="text-[10px] bg-gray-50 text-gray-400 px-2.5 py-1 rounded-full font-bold">快速預約</span>
+                <div class="flex-1 flex flex-col justify-center">
+                    <h3 class="font-bold text-gray-800">${info.name}</h3>
+                    <p class="text-[10px] text-gray-400 mt-1">服務項目：${info.services[0].n} 等...</p>
+                    <div class="flex gap-2 mt-2">
+                        <span class="text-[9px] bg-rose-50 text-rose-500 px-2 py-0.5 rounded-full font-bold italic">可儲值</span>
                     </div>
                 </div>
             </div>
         `).join('');
-
-        // 管理登入 (維持 0000 與 店家代碼功能)
-        window.handleAdminLogin = () => {
-            const code = document.getElementById('admin-code').value;
-            if (code === "0000") navigateTo('page-super-admin');
-            else if (shops[code]) navigateTo('page-shop-admin');
-            else alert("代碼錯誤");
-        };
     </script>
 </body>
 </html>
