@@ -67,73 +67,71 @@
         <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">管理</span></a>
     </nav>
 
-    <script>
-        // 修正後的 10 家 Demo 店家資料 (確保 ID 為 4 位數)
-        const shops = [
-            { id: "0001", name: "Holy Hair Salon", cat: "美髮", srv: "韓系氣墊燙、專業剪髮", pkg: "燙髮套餐: $3280", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600" },
-            { id: "0002", name: "靜謐 SPA 會館", cat: "SPA", srv: "精油深層放鬆、瑞典按摩", pkg: "舒壓 90min: $1800", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600" },
-            { id: "0003", name: "小清新美甲設計", cat: "美甲", srv: "手部凝膠、日系彩繪", pkg: "任選彩繪: $1200", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=600" },
-            { id: "0004", name: "醫美微調專家", cat: "醫美", srv: "皮秒雷射、美肌保養", pkg: "光感煥膚療程: $4500", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600" },
-            { id: "0005", name: "潮流男士理髮", cat: "美髮", srv: "復古油頭、專業修容", pkg: "理髮+修容: $900", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600" },
-            { id: "0006", name: "東方韻味美容", cat: "SPA", srv: "臉部撥筋、漢方經絡", pkg: "漢方美顏 60min: $1500", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600" },
-            { id: "0007", name: "氧氣健身工坊", cat: "健身", srv: "1對1教練、皮拉提斯", pkg: "體驗課程 3堂: $2400", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600" },
-            { id: "0008", name: "奢華睫毛沙龍", cat: "美甲", srv: "3D嫁接、6D爆濃睫毛", pkg: "150根輕羽接睫: $1300", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=600" },
-            { id: "0009", name: "療癒系手作香氛", cat: "SPA", srv: "職人香水課程、調香", pkg: "專屬調香課程: $1980", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600" },
-            { id: "0100", name: "夢幻婚禮秘書", cat: "美髮", srv: "新娘造型、整體設計", pkg: "單一妝髮設計: $3600", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=600" }
-        ];
+   <script>
+    // 1. 統一使用 shops 作為變數名稱，並確保 ID 是四位數
+    const shops = [
+        { id: "0001", name: "Holy Hair Salon", cat: "美髮", srv: "韓系氣墊燙、專業剪髮", pkg: "燙髮套餐: $3280", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600" },
+        { id: "0002", name: "靜謐 SPA 會館", cat: "SPA", srv: "精油深層放鬆、瑞典按摩", pkg: "舒壓 90min: $1800", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600" },
+        { id: "0003", name: "小清新美甲設計", cat: "美甲", srv: "手部凝膠、日系彩繪", pkg: "任選彩繪: $1200", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=600" },
+        { id: "0004", name: "醫美微調專家", cat: "醫美", srv: "皮秒雷射、美肌保養", pkg: "光感煥膚療程: $4500", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600" },
+        { id: "0005", name: "潮流男士理髮", cat: "美髮", srv: "復古油頭、專業修容", pkg: "理髮+修容: $900", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600" },
+        { id: "0006", name: "東方韻味美容", cat: "SPA", srv: "臉部撥筋、漢方經絡", pkg: "漢方美顏 60min: $1500", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600" },
+        { id: "0007", name: "氧氣健身工坊", cat: "健身", srv: "1對1教練、皮拉提斯", pkg: "體驗課程 3堂: $2400", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600" },
+        { id: "0008", name: "奢華睫毛沙龍", cat: "美甲", srv: "3D嫁接、6D爆濃睫毛", pkg: "150根輕羽接睫: $1300", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=600" },
+        { id: "0009", name: "療癒系手作香氛", cat: "SPA", srv: "職人香水課程、調香", pkg: "專屬調香課程: $1980", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600" },
+        { id: "0100", name: "夢幻婚禮秘書", cat: "美髮", srv: "新娘造型、整體設計", pkg: "單一妝髮設計: $3600", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=600" }
+    ];
 
-        let selShop = null;
-        const list = document.getElementById('shop-list');
-        
-        // 渲染店家列表
-        list.innerHTML = shops.map(s => `
-            <div onclick="openDetail('${s.id}')" class="bg-white p-4 rounded-[2rem] flex gap-4 shadow-sm border border-gray-100 active:scale-[0.97] transition-all">
-                <img src="${s.img}" class="w-20 h-20 rounded-2xl object-cover shadow-sm">
-                <div class="flex-1 py-1 flex flex-col justify-center">
-                    <p class="text-[9px] text-rose-500 mb-1 uppercase font-black tracking-widest">${s.cat}</p>
-                    <h3 class="font-bold text-slate-800 text-base">${s.name}</h3>
-                    <p class="text-[10px] text-gray-400 mt-1 font-medium truncate w-48">${s.srv}</p>
-                </div>
-                <div class="flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></div>
-            </div>`).join('');
+    let selShop = null;
+    const list = document.getElementById('shop-list');
+    
+    // 渲染列表：現在變數名稱正確對應到 shops 了
+    list.innerHTML = shops.map(s => `
+        <div onclick="openDetail('${s.id}')" class="bg-white p-4 rounded-[2rem] flex gap-4 shadow-sm border border-gray-100 active:scale-[0.97] transition-all">
+            <img src="${s.img}" class="w-20 h-20 rounded-2xl object-cover shadow-sm">
+            <div class="flex-1 py-1 flex flex-col justify-center">
+                <p class="text-[9px] text-rose-500 mb-1 uppercase font-black tracking-widest">${s.cat}</p>
+                <h3 class="font-bold text-slate-800 text-base">${s.name}</h3>
+                <p class="text-[10px] text-gray-400 mt-1 font-medium truncate w-48">${s.srv}</p>
+            </div>
+            <div class="flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></div>
+        </div>`).join('');
 
-        window.openDetail = (id) => {
-            selShop = shops.find(x => x.id === id);
-            document.getElementById('d-name').innerText = selShop.name;
-            document.getElementById('d-srv').innerText = selShop.srv;
-            document.getElementById('d-pkg').innerText = selShop.pkg;
-            document.getElementById('d-img').innerHTML = `<img src="${selShop.img}" class="w-full h-full object-cover">`;
-            document.getElementById('d-cat').innerHTML = `<span class="bg-rose-100 text-rose-600 text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-tighter">${selShop.cat}</span>`;
-            document.getElementById('detail-overlay').classList.add('active');
+    window.openDetail = (id) => {
+        selShop = shops.find(x => x.id === id); // 這裡也同步修正為 shops
+        document.getElementById('d-name').innerText = selShop.name;
+        document.getElementById('d-srv').innerText = selShop.srv;
+        document.getElementById('d-pkg').innerText = selShop.pkg;
+        document.getElementById('d-img').innerHTML = `<img src="${selShop.img}" class="w-full h-full object-cover">`;
+        document.getElementById('d-cat').innerHTML = `<span class="bg-rose-100 text-rose-600 text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-tighter">${selShop.cat}</span>`;
+        document.getElementById('detail-overlay').classList.add('active');
+    };
+
+    window.closeDetail = () => document.getElementById('detail-overlay').classList.remove('active');
+
+    window.bookNow = () => {
+        const priceMatch = selShop.pkg.match(/\d+/);
+        const price = priceMatch ? parseInt(priceMatch[0]) : 0;
+
+        const newOrder = {
+            id: "BK" + Math.floor(Math.random() * 9000 + 1000),
+            shopId: String(selShop.id).padStart(4, '0'), 
+            shop: selShop.name,
+            service: selShop.srv.split('、')[0],
+            price: price,
+            date: new Date().toLocaleDateString(), 
+            time: "14:00", 
+            status: "待核銷" 
         };
 
-        window.closeDetail = () => document.getElementById('detail-overlay').classList.remove('active');
+        let orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+        orders.unshift(newOrder);
+        localStorage.setItem('my_orders', JSON.stringify(orders));
+        window.location.href = "orders.html";
+    };
 
-        // --- 核心預約邏輯：補強安全補零機制 ---
-        window.bookNow = () => {
-            const priceMatch = selShop.pkg.match(/\d+/);
-            const price = priceMatch ? parseInt(priceMatch[0]) : 0;
-
-            const newOrder = {
-                id: "BK" + Math.floor(Math.random() * 9000 + 1000),
-                // 強制確保 shopId 存入時為 4 位數
-                shopId: String(selShop.id).padStart(4, '0'), 
-                shop: selShop.name,
-                service: selShop.srv.split('、')[0],
-                price: price,
-                date: new Date().toLocaleDateString(), 
-                time: "14:00", 
-                status: "待核銷" 
-            };
-
-            let orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-            orders.unshift(newOrder);
-            localStorage.setItem('my_orders', JSON.stringify(orders));
-
-            window.location.href = "orders.html";
-        };
-
-        lucide.createIcons();
-    </script>
+    lucide.createIcons();
+</script>
 </body>
 </html>
+
