@@ -13,9 +13,7 @@
         .accordion-item.active .accordion-content { max-height: 500px; transition: max-height 0.5s ease-in; }
         .accordion-item.active .chevron { transform: rotate(180deg); }
         .chevron { transition: transform 0.3s; }
-        /* 隱藏輸入框邊框 */
         .edit-input { background: transparent; border: none; outline: none; width: 100%; color: white; }
-        .edit-input::placeholder { color: rgba(255,255,255,0.4); }
     </style>
 </head>
 <body class="pb-24">
@@ -24,15 +22,16 @@
         <div class="absolute top-0 right-0 w-40 h-40 bg-rose-500/20 rounded-full -mr-20 -mt-20 blur-3xl"></div>
         
         <div class="flex items-center gap-4 mb-8">
-            <div class="relative group">
-                <img id="user-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200" class="w-16 h-16 rounded-2xl object-cover border-2 border-rose-400 shadow-lg">
-                <button onclick="editProfile()" class="absolute -bottom-1 -right-1 bg-rose-500 text-white p-1 rounded-lg shadow-md">
-                    <i data-lucide="edit-3" class="w-3 h-3"></i>
+            <div class="relative">
+                <img id="user-avatar" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200" class="w-16 h-16 rounded-2xl object-cover border-2 border-rose-400 shadow-lg bg-white">
+                <input type="file" id="avatar-input" accept="image/*" class="hidden" onchange="uploadPhoto(this)">
+                <button onclick="document.getElementById('avatar-input').click()" class="absolute -bottom-1 -right-1 bg-rose-500 text-white p-1.5 rounded-lg shadow-md active:scale-90">
+                    <i data-lucide="camera" class="w-3 h-3"></i>
                 </button>
             </div>
             <div class="flex-1">
-                <input type="text" id="user-name" oninput="saveProfile()" class="edit-input font-black text-xl italic uppercase tracking-tight" placeholder="您的姓名">
-                <input type="tel" id="user-phone" oninput="saveProfile()" class="edit-input text-rose-400 text-[10px] font-bold tracking-[0.2em]" placeholder="您的電話">
+                <input type="text" id="user-name" oninput="saveProfile()" class="edit-input font-black text-xl italic uppercase tracking-tight" placeholder="點擊輸入姓名">
+                <input type="tel" id="user-phone" oninput="saveProfile()" class="edit-input text-rose-400 text-[10px] font-bold tracking-[0.2em]" placeholder="點擊輸入電話">
             </div>
         </div>
 
@@ -42,27 +41,41 @@
                     <p class="text-[10px] opacity-60 mb-1 font-bold tracking-widest uppercase">Wallet Balance</p>
                     <h3 id="bal" class="text-3xl font-black italic tracking-tighter">$ 0</h3>
                 </div>
-                <div class="w-24 text-right">
-                    <input type="number" id="recharge-amount" placeholder="金額" class="w-full bg-white/20 border border-white/20 rounded-lg px-2 py-1 text-xs text-white placeholder:text-white/40 mb-2 outline-none">
-                    <button onclick="recharge()" class="w-full bg-rose-500 hover:bg-rose-600 text-white py-2 rounded-xl font-bold text-[10px] shadow-lg active:scale-90 transition-all">儲值</button>
+                <div class="w-28 text-right">
+                    <input type="number" id="recharge-amount" placeholder="輸入金額" class="w-full bg-white/20 border border-white/20 rounded-lg px-2 py-1.5 text-xs text-white placeholder:text-white/40 mb-2 outline-none">
+                    <button onclick="recharge()" class="w-full bg-rose-500 hover:bg-rose-600 text-white py-2.5 rounded-xl font-bold text-[11px] shadow-lg active:scale-90 transition-all">儲值餘額</button>
                 </div>
             </div>
         </div>
     </div>
 
     <main class="px-6 -mt-10 relative z-10">
-        <div onclick="alert('分享代碼：HOLY888\n好友首單，雙方皆得 $200！')" class="bg-gradient-to-r from-rose-500 to-rose-600 p-5 rounded-[2rem] text-white shadow-xl flex items-center justify-between mb-8 active:scale-95 transition cursor-pointer">
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center"><i data-lucide="gift" class="w-5 h-5"></i></div>
-                <div><h4 class="font-bold text-sm">推薦好友賺取儲值金</h4><p class="text-[9px] opacity-80">邀請好友首單，立得 $200</p></div>
+        
+        <div class="bg-white p-5 rounded-[2rem] shadow-xl mb-8 border border-gray-100">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-rose-50 text-rose-500 rounded-xl flex items-center justify-center"><i data-lucide="gift" class="w-5 h-5"></i></div>
+                <div>
+                    <h4 class="font-bold text-sm text-slate-800">好友推薦獎勵</h4>
+                    <p class="text-[9px] text-gray-400 uppercase font-bold tracking-wider">Referral System</p>
+                </div>
             </div>
-            <i data-lucide="chevron-right" class="w-5 h-5 opacity-60"></i>
+            
+            <div class="space-y-3">
+                <div class="bg-slate-50 p-3 rounded-xl flex justify-between items-center">
+                    <span class="text-[10px] text-gray-400 font-bold uppercase">您的推薦碼</span>
+                    <span id="my-code" class="text-rose-500 font-black tracking-widest">HOLY888</span>
+                </div>
+                <div class="flex gap-2">
+                    <input type="text" id="referral-code" placeholder="輸入好友推薦碼" class="flex-1 bg-gray-50 border-none rounded-xl px-4 py-3 text-xs outline-none focus:ring-1 focus:ring-rose-400">
+                    <button onclick="redeem()" class="bg-slate-900 text-white px-6 rounded-xl text-xs font-bold active:scale-95">兌換 $200</button>
+                </div>
+            </div>
         </div>
 
         <div class="mb-8">
             <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 px-2">歷史消費記錄</h4>
             <div id="history-list" class="space-y-3">
-                <p class="text-center text-gray-400 py-6 text-[10px] italic bg-white rounded-2xl border border-gray-100">尚無近期交易紀錄</p>
+                <p class="text-center text-gray-400 py-6 text-[10px] italic bg-white rounded-2xl border border-gray-100">尚無交易紀錄</p>
             </div>
         </div>
 
@@ -71,19 +84,15 @@
             <div class="space-y-2">
                 <div class="accordion-item bg-white rounded-[1.25rem] shadow-sm overflow-hidden">
                     <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between"><div class="flex items-center gap-3"><i data-lucide="lock" class="w-4 h-4 text-slate-400"></i><span class="text-sm font-bold text-slate-600">隱私權政策</span></div><i data-lucide="chevron-down" class="chevron w-4 h-4 text-slate-300"></i></button>
-                    <div class="accordion-content px-5 pb-5 text-[11px] text-slate-500 border-t border-gray-50"><div class="pt-4"><p>1. 我們收集預約紀錄以提供服務。2. 您的數據存儲於本地加密環境。</p></div></div>
+                    <div class="accordion-content px-5 pb-5 text-[11px] text-slate-500 border-t border-gray-50"><div class="pt-4"><p>1. 我們僅收集必要的預約資訊。2. 您的數據存儲於本地加密環境，絕不外洩。</p></div></div>
                 </div>
                 <div class="accordion-item bg-white rounded-[1.25rem] shadow-sm overflow-hidden">
                     <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between"><div class="flex items-center gap-3"><i data-lucide="info" class="w-4 h-4 text-slate-400"></i><span class="text-sm font-bold text-slate-600">關於我們</span></div><i data-lucide="chevron-down" class="chevron w-4 h-4 text-slate-300"></i></button>
-                    <div class="accordion-content px-5 pb-5 text-[11px] text-slate-500 border-t border-gray-50"><div class="pt-4"><p>BEAUTY LIFE 定義您的專屬美學，提供最直覺、有溫度的預約服務。</p></div></div>
-                </div>
-                <div class="accordion-item bg-white rounded-[1.25rem] shadow-sm overflow-hidden">
-                    <button onclick="toggleAccordion(this)" class="w-full p-4 flex items-center justify-between"><div class="flex items-center gap-3"><i data-lucide="file-text" class="w-4 h-4 text-slate-400"></i><span class="text-sm font-bold text-slate-600">條款與條件</span></div><i data-lucide="chevron-down" class="chevron w-4 h-4 text-slate-300"></i></button>
-                    <div class="accordion-content px-5 pb-5 text-[11px] text-slate-500 border-t border-gray-50"><div class="pt-4"><p>預約請準時。儲值金無期限，可用於所有合作店家，不可兌現。</p></div></div>
+                    <div class="accordion-content px-5 pb-5 text-[11px] text-slate-500 border-t border-gray-50"><div class="pt-4"><p>BEAUTY LIFE 致力於打造最頂級的美業服務平台，為您提供精確、快速、有溫度的預約體驗。</p></div></div>
                 </div>
                 <a href="mailto:holy@hairweb.net" class="flex p-4 bg-white rounded-[1.25rem] shadow-sm border-2 border-rose-50 items-center justify-between">
                     <div class="flex items-center gap-3"><i data-lucide="mail" class="w-4 h-4 text-rose-500"></i><span class="text-sm font-bold text-slate-600">聯絡我們</span></div>
-                    <span class="text-[9px] text-rose-400 font-bold">holy@hairweb.net</span>
+                    <span class="text-[9px] text-rose-400 font-bold font-mono">holy@hairweb.net</span>
                 </a>
             </div>
         </div>
@@ -97,11 +106,47 @@
     </nav>
 
     <script>
-        // --- 1. 個人資料邏輯 ---
+        // --- 1. 照片上傳邏輯 ---
+        function uploadPhoto(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Img = e.target.result;
+                    document.getElementById('user-avatar').src = base64Img;
+                    localStorage.setItem('u_avatar', base64Img); // 存入本地儲存
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- 2. 好友推薦邏輯 ---
+        function redeem() {
+            const code = document.getElementById('referral-code').value.toUpperCase();
+            const used = localStorage.getItem('referral_used');
+            
+            if (used) {
+                alert("您已參加過推薦活動囉！");
+                return;
+            }
+            if (code === "FRIEND200" || code === "HOLY888") {
+                userBal += 200;
+                localStorage.setItem('user_bal', userBal);
+                localStorage.setItem('referral_used', 'true'); // 標記已領取，不可重複領
+                updateBalUI();
+                addHistory("好友推薦獎勵", 200, "plus");
+                alert("兌換成功！$200 已存入錢包");
+            } else {
+                alert("無效的推薦碼，請再試一次");
+            }
+        }
+
+        // --- 3. 基礎資料載入 ---
         function loadProfile() {
             document.getElementById('user-name').value = localStorage.getItem('u_name') || '尊榮會員';
             document.getElementById('user-phone').value = localStorage.getItem('u_phone') || '0900-000-000';
-            document.getElementById('user-avatar').src = localStorage.getItem('u_avatar') || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200';
+            const savedAvatar = localStorage.getItem('u_avatar');
+            if(savedAvatar) document.getElementById('user-avatar').src = savedAvatar;
         }
 
         function saveProfile() {
@@ -109,31 +154,20 @@
             localStorage.setItem('u_phone', document.getElementById('user-phone').value);
         }
 
-        function editProfile() {
-            const newUrl = prompt("請貼上新的頭像圖片網址 (URL):", document.getElementById('user-avatar').src);
-            if(newUrl) {
-                document.getElementById('user-avatar').src = newUrl;
-                localStorage.setItem('u_avatar', newUrl);
-            }
-        }
-
-        // --- 2. 儲值邏輯 ---
         let userBal = parseInt(localStorage.getItem('user_bal') || '0');
         function updateBalUI() { document.getElementById('bal').innerText = "$ " + userBal.toLocaleString(); }
 
         window.recharge = () => {
             const amount = parseInt(document.getElementById('recharge-amount').value);
-            if(!amount || amount <= 0) { alert("請輸入正確的儲值金額"); return; }
-            
+            if(!amount || amount <= 0) { alert("請輸入儲值金額"); return; }
             userBal += amount;
             localStorage.setItem('user_bal', userBal);
             updateBalUI();
-            addHistory("帳戶自行儲值", amount, "plus");
+            addHistory("帳戶儲值", amount, "plus");
             document.getElementById('recharge-amount').value = '';
-            alert(`儲值成功！已存入 $${amount}`);
+            alert(`儲值成功！$${amount}`);
         };
 
-        // --- 3. 其他功能 (手風琴、歷史紀錄) ---
         function toggleAccordion(button) {
             const item = button.parentElement;
             const active = item.classList.contains('active');
