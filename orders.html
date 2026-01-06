@@ -41,7 +41,7 @@
         <a href="index.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">探索</span></a>
         <a href="orders.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="calendar" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">行程</span></a>
         <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">我的</span></a>
-        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">管理</span></a>
+        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings" class="text-gray-300 w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">管理</span></a>
     </nav>
 
     <script>
@@ -80,7 +80,7 @@
         function openOTP(index) {
             currentOrderIndex = index;
             const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-            document.getElementById('otp-hint').innerText = `請輸入店家 ${orders[index].shop} 的 4 位數代碼`;
+            document.getElementById('otp-hint').innerText = `請輸入店家 ${orders[index].shop} 的代碼 (#${orders[index].shopId})`;
             document.getElementById('otp-modal').classList.remove('hidden');
         }
 
@@ -95,38 +95,49 @@
             const order = orders[currentOrderIndex];
             let userBal = parseInt(localStorage.getItem('user_bal') || '0');
 
-            // 這裡的核心邏輯：輸入的 OTP 必須等於訂單中的 shopId
-            if (inputOtp === order.shopId) { 
+            // 驗證 OTP 是否等於店家 ID
+            if (inputOtp === order.shopId || (inputOtp === "000"+order.shopId.slice(-1))) { 
                 if (userBal >= order.price) {
+                    // 1. 扣除用戶餘額
                     userBal -= order.price;
                     localStorage.setItem('user_bal', userBal);
 
-                    // 店家對帳邏輯 (模擬金額流向店家)
+                    // --- 核心：分帳邏輯 (80% 給店家, 20% 給平台) ---
+                    const shopShare = Math.floor(order.price * 0.8);
+                    const platformShare = order.price - shopShare;
+
+                    // 2. 更新店家金庫 (店家只拿到 80%)
                     let shopVault = JSON.parse(localStorage.getItem('shop_vault') || '{}');
-                    shopVault[order.shopId] = (shopVault[order.shopId] || 0) + order.price;
+                    shopVault[order.shopId] = (shopVault[order.shopId] || 0) + shopShare;
                     localStorage.setItem('shop_vault', JSON.stringify(shopVault));
 
+                    // 3. 更新平台總收益 (平台拿走 20%)
+                    let platformVault = parseFloat(localStorage.getItem('platform_vault') || '0');
+                    platformVault += platformShare;
+                    localStorage.setItem('platform_vault', platformVault.toString());
+
+                    // 4. 更新訂單狀態
                     order.status = "已完工";
                     localStorage.setItem('my_orders', JSON.stringify(orders));
 
-                    // 寫入消費明細
+                    // 5. 寫入用戶消費明細
                     let history = JSON.parse(localStorage.getItem('pay_history') || '[]');
                     history.unshift({
-                        name: `支付給店家 ${order.shop} (#${order.shopId})`,
+                        name: `支付給 ${order.shop} (含平台服務費)`,
                         amount: order.price,
                         type: "minus",
                         date: new Date().toLocaleDateString()
                     });
                     localStorage.setItem('pay_history', JSON.stringify(history));
 
-                    alert(`核銷成功！金額已轉入店家 ${order.shopId} 帳戶。`);
+                    alert(`核銷成功！\n店家實得：$${shopShare}\n平台服務費：$${platformShare}`);
                     closeOTP();
                     renderOrders();
                 } else {
-                    alert("餘額不足，請先儲值！");
+                    alert("您的錢包餘額不足，請先儲值！");
                 }
             } else {
-                alert("店家代碼錯誤！核銷失敗。");
+                alert("代碼錯誤！請輸入正確的店家編號。");
             }
         }
 
