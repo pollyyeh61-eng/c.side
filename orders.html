@@ -95,9 +95,9 @@
             const order = orders[currentOrderIndex];
             let userBal = parseInt(localStorage.getItem('user_bal') || '0');
 
-            // --- 核心修正：寬鬆匹配邏輯 ---
-            // 只要數值相等 (例如 001 == 0001) 就通過
-            const isCodeCorrect = parseInt(inputOtp) === parseInt(order.shopId);
+            // 將使用者的輸入自動補足前方 0 到 4 位數，再進行字串比對
+            const formattedInput = inputOtp.padStart(4, '0'); 
+            const isCodeCorrect = (formattedInput === order.shopId);
 
             if (isCodeCorrect) { 
                 if (userBal >= order.price) {
@@ -151,3 +151,4 @@
     </script>
 </body>
 </html>
+
