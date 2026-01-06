@@ -2,21 +2,22 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>美業平台入口・你的美感生活</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; background: #f9fafb; -webkit-tap-highlight-color: transparent; }
         .detail-layer { display: none; position: fixed; inset: 0; background: white; z-index: 100; overflow-y: auto; }
-        .detail-layer.active { display: block; }
+        .detail-layer.active { display: block; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
-<body class="pb-20">
+<body class="pb-24">
     <header class="bg-white p-5 sticky top-0 z-50 border-b">
         <h1 class="text-rose-500 font-black text-xl italic tracking-tighter">你的美感生活</h1>
         <div class="mt-3 relative">
-            <input type="text" placeholder="搜尋店家..." class="w-full bg-gray-100 rounded-xl py-2 px-10 text-sm outline-none">
+            <input type="text" placeholder="搜尋店家或服務..." class="w-full bg-gray-100 rounded-xl py-2 px-10 text-sm outline-none focus:ring-1 focus:ring-rose-300">
             <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
         </div>
     </header>
@@ -24,29 +25,47 @@
     <main class="p-4 space-y-3" id="shop-list"></main>
 
     <div id="detail-overlay" class="detail-layer">
-        <nav class="p-4 flex items-center border-b sticky top-0 bg-white shadow-sm">
-            <button onclick="closeDetail()"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-            <span class="ml-3 font-bold text-lg">店家詳情</span>
-        </nav>
-        <div class="p-5 pb-32 space-y-6">
-            <div id="d-img" class="w-full h-56 rounded-3xl overflow-hidden bg-gray-100 shadow-sm"></div>
-            <div>
-                <h2 id="d-name" class="text-2xl font-black text-gray-800"></h2>
-                <div id="d-cat" class="mt-1"></div>
+        <nav class="p-4 flex items-center justify-between border-b sticky top-0 bg-white shadow-sm">
+            <div class="flex items-center">
+                <button onclick="closeDetail()" class="p-2 -ml-2"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+                <span class="ml-1 font-bold text-lg">店家詳情</span>
             </div>
+            <i data-lucide="share-2" class="w-5 h-5 text-gray-400"></i>
+        </nav>
+        
+        <div class="p-5 pb-32 space-y-6">
+            <div id="d-img" class="w-full h-64 rounded-[2.5rem] overflow-hidden bg-gray-100 shadow-md"></div>
+            
+            <div>
+                <div id="d-cat" class="mb-2"></div>
+                <h2 id="d-name" class="text-2xl font-black text-gray-800 tracking-tight"></h2>
+            </div>
+
             <div class="space-y-4">
-                <div class="bg-gray-50 p-4 rounded-2xl"><h3 class="font-bold text-sm text-gray-400 mb-2 uppercase">服務介紹</h3><p id="d-srv" class="text-sm text-gray-600 leading-relaxed"></p></div>
-                <div class="bg-rose-50 p-5 rounded-3xl border border-rose-100"><h3 class="font-bold text-rose-500 text-sm mb-2 uppercase">套餐內容</h3><p id="d-pkg" class="text-rose-600 font-bold text-base"></p></div>
+                <div class="bg-gray-50 p-5 rounded-3xl">
+                    <h3 class="font-bold text-xs text-gray-400 mb-3 uppercase tracking-widest">服務介紹</h3>
+                    <p id="d-srv" class="text-sm text-gray-600 leading-relaxed font-medium"></p>
+                </div>
+                
+                <div class="bg-rose-50 p-6 rounded-[2rem] border border-rose-100">
+                    <h3 class="font-bold text-rose-500 text-xs mb-3 uppercase tracking-widest">目前推薦套餐</h3>
+                    <p id="d-pkg" class="text-rose-600 font-black text-xl italic"></p>
+                </div>
             </div>
         </div>
-        <div class="fixed bottom-6 left-0 right-0 px-6"><button onclick="bookNow()" class="w-full bg-slate-900 text-white py-4 rounded-full font-bold shadow-xl active:scale-95 transition">立即預約服務</button></div>
+
+        <div class="fixed bottom-8 left-0 right-0 px-8">
+            <button onclick="bookNow()" class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold shadow-2xl active:scale-95 transition-all text-sm">
+                確認預約服務
+            </button>
+        </div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50 shadow-md">
-        <a href="./index.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">探索</span></a>
-        <a href="./orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">行程</span></a>
-        <a href="./profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">我的</span></a>
-        <a href="./admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">管理</span></a>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t flex justify-around py-3 z-50">
+        <a href="index.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">探索</span></a>
+        <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">行程</span></a>
+        <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">我的</span></a>
+        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">管理</span></a>
     </nav>
 
     <script>
@@ -55,23 +74,22 @@
             { id: "002", name: "靜謐 SPA 會館", cat: "SPA", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500", srv: "精油舒壓、經絡按摩", pkg: "放鬆課程 $1800" },
             { id: "003", name: "小清新美甲設計", cat: "美甲", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=500", srv: "凝膠美甲、設計彩繪", pkg: "設計款任選 $1200" },
             { id: "004", name: "醫美微調專家", cat: "醫美", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=500", srv: "皮秒雷射、煥膚保養", pkg: "亮白療程 $4500" },
-            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500", srv: "復古油頭、專業修容", pkg: "理髮修容 $900" },
-            { id: "006", name: "東方韻味美容", cat: "SPA", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=500", srv: "臉部撥筋、漢方保養", pkg: "漢方美顏 $1500" },
-            { id: "007", name: "氧氣健身工坊", cat: "健身", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500", srv: "1對1私人教練", pkg: "體驗課程 $2400" },
-            { id: "008", name: "奢華睫毛沙龍", cat: "美甲", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=500", srv: "嫁接睫毛、3D設計", pkg: "輕羽接睫 $1300" },
-            { id: "009", name: "療癒系手作香氛", cat: "SPA", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=500", srv: "專屬調香課程", pkg: "手作香氛 $1980" },
-            { id: "010", name: "夢幻婚禮秘書", cat: "美髮", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=500", srv: "新娘造型、婚禮設計", pkg: "造型設計 $3600" }
+            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500", srv: "復古油頭、專業修容", pkg: "理髮修容 $900" }
         ];
 
         let selShop = null;
         const list = document.getElementById('shop-list');
+        
+        // 渲染列表
         list.innerHTML = shops.map(s => `
-            <div onclick="openDetail('${s.id}')" class="bg-white p-3.5 rounded-[1.8rem] flex gap-4 shadow-sm border border-gray-50 active:scale-95 transition">
-                <img src="${s.img}" class="w-20 h-20 rounded-2xl object-cover">
+            <div onclick="openDetail('${s.id}')" class="bg-white p-4 rounded-[2rem] flex gap-4 shadow-sm border border-gray-100 active:scale-[0.97] transition-all">
+                <img src="${s.img}" class="w-20 h-20 rounded-2xl object-cover shadow-sm">
                 <div class="flex-1 py-1 flex flex-col justify-center">
-                    <h3 class="font-bold text-gray-800 text-base">${s.name}</h3>
-                    <p class="text-[10px] text-gray-400 mt-1 uppercase font-bold">${s.cat}</p>
+                    <p class="text-[9px] text-rose-500 mb-1 uppercase font-black tracking-widest">${s.cat}</p>
+                    <h3 class="font-bold text-slate-800 text-base">${s.name}</h3>
+                    <p class="text-[10px] text-gray-400 mt-1 font-medium truncate w-48">${s.srv}</p>
                 </div>
+                <div class="flex items-center"><i data-lucide="chevron-right" class="w-4 h-4 text-gray-300"></i></div>
             </div>`).join('');
 
         window.openDetail = (id) => {
@@ -80,19 +98,39 @@
             document.getElementById('d-srv').innerText = selShop.srv;
             document.getElementById('d-pkg').innerText = selShop.pkg;
             document.getElementById('d-img').innerHTML = `<img src="${selShop.img}" class="w-full h-full object-cover">`;
-            document.getElementById('d-cat').innerHTML = `<span class="bg-rose-50 text-rose-500 text-[10px] px-3 py-1 rounded-full font-bold">${selShop.cat}</span>`;
+            document.getElementById('d-cat').innerHTML = `<span class="bg-rose-100 text-rose-600 text-[10px] px-3 py-1 rounded-full font-black uppercase tracking-tighter">${selShop.cat}</span>`;
             document.getElementById('detail-overlay').classList.add('active');
         };
+
         window.closeDetail = () => document.getElementById('detail-overlay').classList.remove('active');
+
+        // --- 核心預約邏輯：串連第二頁與第三頁 ---
         window.bookNow = () => {
-            let b = JSON.parse(localStorage.getItem('my_bookings') || '[]');
-            b.unshift({...selShop, orderId: "BK"+Math.floor(Math.random()*9000+1000)});
-            localStorage.setItem('my_bookings', JSON.stringify(b));
+            // 1. 從 pkg 字串中提取純數字金額
+            const priceMatch = selShop.pkg.match(/\d+/);
+            const price = priceMatch ? parseInt(priceMatch[0]) : 0;
+
+            // 2. 建立訂單物件
+            const newOrder = {
+                id: "BK" + Math.floor(Math.random() * 9000 + 1000),
+                shop: selShop.name,
+                service: selShop.srv.split('、')[0], // 抓第一個服務當代表
+                price: price,
+                date: new Date().toLocaleDateString(), 
+                time: "14:00", 
+                status: "待核銷" // 這個狀態會讓第二頁出現 OTP 核銷按鈕
+            };
+
+            // 3. 儲存至本地 (與第二、三頁統一標籤)
+            let orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+            orders.unshift(newOrder);
+            localStorage.setItem('my_orders', JSON.stringify(orders));
+
+            // 4. 前往行程頁
             window.location.href = "orders.html";
         };
+
         lucide.createIcons();
     </script>
 </body>
 </html>
-
-
