@@ -10,13 +10,13 @@
 <body class="bg-slate-50 pb-32">
     <header class="p-6 bg-white border-b flex justify-between items-center sticky top-0 z-50">
         <h2 class="font-black text-2xl italic">ADMIN</h2>
-        <button onclick="logout()" class="text-sm text-rose-500 font-bold border border-rose-200 px-4 py-1 rounded-full">登出</button>
+        <button onclick="logout()" class="text-xs text-rose-500 font-bold border border-rose-200 px-4 py-2 rounded-full">登出</button>
     </header>
 
     <div id="login-box" class="p-10 text-center mt-10">
-        <p class="text-gray-400 font-bold mb-4">輸入管理代碼 (0000/001-010)</p>
-        <input type="password" id="code" placeholder="••••" class="w-full text-center text-4xl p-6 bg-white rounded-[2rem] mb-8 shadow-inner outline-none border-none">
-        <button onclick="auth()" class="w-full bg-slate-900 text-white py-5 rounded-[2rem] font-bold text-xl shadow-xl">驗證身份</button>
+        <p class="text-gray-400 font-bold mb-6 tracking-widest uppercase">身份驗證</p>
+        <input type="password" id="code" placeholder="輸入 0000" class="w-full text-center text-5xl p-6 bg-white rounded-[2.5rem] mb-10 shadow-inner border-none outline-none">
+        <button onclick="auth()" class="w-full bg-slate-900 text-white py-6 rounded-[2.5rem] font-bold text-xl shadow-xl">進入管理後台</button>
     </div>
 
     <div id="editor-box" class="hidden p-5 space-y-6">
@@ -24,16 +24,11 @@
             <label class="text-xs font-bold text-rose-400 block mb-3 uppercase tracking-widest">總管理員模式：切換店家</label>
             <select id="shop-sel" onchange="switchTarget(this.value)" class="w-full p-4 bg-gray-50 rounded-2xl text-lg font-bold border-none outline-none"></select>
         </div>
-
-        <div class="bg-white p-6 rounded-[2.5rem] shadow-md space-y-6">
-            <h3 class="font-bold text-gray-400 text-sm flex justify-between">內容編輯 <span class="text-emerald-500 italic">Auto-Saving</span></h3>
-            <div class="space-y-3">
-                <input type="text" data-key="p1" oninput="save(this)" class="p-in w-full p-4 bg-gray-50 rounded-xl text-sm border-none" placeholder="主圖 URL (五張照片之一)">
-                <input type="text" data-key="p2" oninput="save(this)" class="p-in w-full p-4 bg-gray-50 rounded-xl text-sm border-none" placeholder="照片 2 URL">
-            </div>
-            <textarea data-key="srv" oninput="save(this)" id="adm-srv" placeholder="服務介紹內容" class="w-full h-32 p-4 bg-gray-50 rounded-2xl text-base border-none"></textarea>
-            <textarea data-key="pkg" oninput="save(this)" id="adm-pkg" placeholder="套餐價格與內容" class="w-full h-32 p-4 bg-rose-50 text-rose-500 rounded-2xl text-base border-none font-bold"></textarea>
-            <button onclick="alert('雲端同步已完成！')" class="w-full bg-slate-900 text-white py-5 rounded-full font-bold text-xl shadow-lg">發布更新至雲端</button>
+        <div class="bg-white p-8 rounded-[3rem] shadow-xl space-y-6">
+            <h3 class="font-bold text-gray-400 text-sm flex justify-between">內容編輯 <span class="text-emerald-500 italic">Auto-Save</span></h3>
+            <textarea data-key="srv" oninput="save(this)" id="adm-srv" placeholder="服務介紹" class="w-full h-40 p-5 bg-gray-50 rounded-[2rem] text-lg border-none"></textarea>
+            <textarea data-key="pkg" oninput="save(this)" id="adm-pkg" placeholder="套餐價格" class="w-full h-40 p-5 bg-rose-50 text-rose-600 rounded-[2rem] text-lg border-none font-bold"></textarea>
+            <button onclick="alert('雲端同步成功！')" class="w-full bg-slate-900 text-white py-6 rounded-full font-bold text-xl shadow-lg">發布更新</button>
         </div>
     </div>
 
@@ -47,34 +42,29 @@
     <script>
         const shopNames = ["Holy Hair", "靜謐 SPA", "小清新美甲", "醫美微調", "潮流理髮", "東方美容", "氧氣健身", "奢華睫毛", "手作香氛", "夢幻婚秘"];
         let targetId = '';
-
         window.auth = () => {
             const val = document.getElementById('code').value;
             if(val === '0000' || (parseInt(val) >= 1 && parseInt(val) <= 10)) {
                 localStorage.setItem('adm_session', val);
                 enter(val);
-            } else alert("無效代碼");
+            } else alert("驗證失敗");
         };
-
         const enter = (val) => {
             document.getElementById('login-box').classList.add('hidden');
             document.getElementById('editor-box').classList.remove('hidden');
             if(val === '0000') {
                 const sel = document.getElementById('shop-sel');
-                sel.innerHTML = shopNames.map((n, i) => `<option value="${(i+1).toString().padStart(3,'0')}">${n} (${(i+1).toString().padStart(3,'0')})</option>`).join('');
+                sel.innerHTML = shopNames.map((n, i) => `<option value="${(i+1).toString().padStart(3,'0')}">${n}</option>`).join('');
                 document.getElementById('super-tools').classList.remove('hidden');
                 targetId = sel.value;
-            } else { targetId = val.padStart(3,'0'); }
+            } else targetId = val.padStart(3,'0');
             load();
         };
-
         window.switchTarget = (id) => { targetId = id; load(); };
         window.save = (el) => { localStorage.setItem(`save_${targetId}_${el.dataset.key}`, el.value); };
         const load = () => {
             document.getElementById('adm-srv').value = localStorage.getItem(`save_${targetId}_srv`) || '';
             document.getElementById('adm-pkg').value = localStorage.getItem(`save_${targetId}_pkg`) || '';
-            const pIns = document.querySelectorAll('.p-in');
-            pIns.forEach((input, i) => { input.value = localStorage.getItem(`save_${targetId}_p${i+1}`) || ''; });
         };
         window.logout = () => { localStorage.removeItem('adm_session'); location.reload(); };
         window.onload = () => { if(localStorage.getItem('adm_session')) enter(localStorage.getItem('adm_session')); lucide.createIcons(); };
