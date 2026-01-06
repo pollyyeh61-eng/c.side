@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8"><title>我的行程</title>
-    <script src="https://cdn.tailwindcss.com"></script><script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>我的行程</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="bg-gray-50 pb-24">
-    <header class="p-6 bg-white border-b font-black text-xl">我的行程</header>
+    <header class="p-8 bg-white border-b font-black text-2xl">我的行程</header>
     <div id="order-list" class="p-6 space-y-4"></div>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
-        <a href="index.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="home"></i><span class="text-[10px]">探索</span></a>
-        <a href="orders.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-[10px]">行程</span></a>
-        <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user"></i><span class="text-[10px]">我的</span></a>
-        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings"></i><span class="text-[10px]">管理</span></a>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-4 z-50">
+        <a href="index.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="home"></i><span class="text-xs mt-1">探索</span></a>
+        <a href="orders.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-xs mt-1">行程</span></a>
+        <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user"></i><span class="text-xs mt-1">我的</span></a>
+        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings"></i><span class="text-xs mt-1">管理</span></a>
     </nav>
-
     <script>
-        const bookings = JSON.parse(localStorage.getItem('my_bookings') || '[]');
+        const b = JSON.parse(localStorage.getItem('my_bookings') || '[]');
         const container = document.getElementById('order-list');
-        if(bookings.length === 0) container.innerHTML = '<p class="text-gray-400 text-center mt-20">目前沒有預約行程</p>';
-        else container.innerHTML = bookings.map(b => `
-            <div class="bg-white p-5 rounded-[2rem] shadow-sm flex gap-4 items-center">
-                <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 font-bold text-xs">NEW</div>
-                <div class="flex-1 font-bold text-gray-800">${b.name}<p class="text-[10px] text-gray-400 font-normal">代碼: ${b.orderId}</p></div>
-                <span class="text-[10px] bg-emerald-50 text-emerald-500 px-3 py-1 rounded-full font-bold">已確認</span>
+        container.innerHTML = b.length === 0 ? '<p class="text-center text-gray-400 mt-20">尚無預約</p>' : b.map(i => `
+            <div class="bg-white p-6 rounded-[2rem] shadow-sm flex items-center gap-4 border border-gray-100">
+                <div class="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 font-bold">新</div>
+                <div class="flex-1 font-bold text-lg">${i.name}<p class="text-xs text-gray-400 font-normal">代碼: ${i.orderId}</p></div>
+                <span class="text-xs bg-emerald-50 text-emerald-500 px-3 py-1 rounded-full font-bold">已預約</span>
             </div>`).join('');
         lucide.createIcons();
     </script>
