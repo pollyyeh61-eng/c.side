@@ -2,25 +2,27 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>個人中心</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-50 pb-24">
-    <div class="bg-rose-500 p-10 pt-20 text-white rounded-b-[3.5rem] shadow-xl">
-        <div class="flex items-center gap-5"><div class="w-20 h-20 bg-white rounded-[2rem] flex items-center justify-center text-rose-500 shadow-xl"><i data-lucide="user" class="w-10 h-10"></i></div><div><h2 class="text-2xl font-black italic">BEAUTY MEMBER</h2><p class="text-sm opacity-80">您的美感管家</p></div></div>
-        <div class="mt-10 grid grid-cols-2 gap-5">
-            <div class="bg-white/20 p-6 rounded-[2rem] backdrop-blur-md text-center"><p class="text-xs opacity-70 mb-1">錢包餘額</p><p id="bal" class="text-3xl font-black">$ 0</p></div>
-            <button onclick="add()" class="bg-white text-rose-500 p-6 rounded-[2rem] font-bold text-xl shadow-lg">快速儲值</button>
+<body class="bg-gray-50 pb-20">
+    <div class="bg-rose-500 p-8 pt-16 text-white rounded-b-[2.5rem] shadow-lg">
+        <div class="flex items-center gap-4">
+            <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-rose-500 shadow-md"><i data-lucide="user" class="w-7 h-7"></i></div>
+            <div><h2 class="text-lg font-black italic tracking-tighter uppercase">Member</h2><p class="text-[10px] opacity-80">Gold Status</p></div>
+        </div>
+        <div class="mt-8 grid grid-cols-2 gap-4">
+            <div class="bg-white/15 p-4 rounded-2xl backdrop-blur-md text-center border border-white/10"><p class="text-[9px] opacity-70 mb-1">餘額</p><p id="bal" class="text-xl font-black">$ 0</p></div>
+            <button onclick="add()" class="bg-white text-rose-500 p-4 rounded-2xl font-bold text-sm shadow-md active:scale-95 transition">儲值 $1000</button>
         </div>
     </div>
-
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-4 z-50">
-        <a href="index.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="home"></i><span class="text-xs mt-1">探索</span></a>
-        <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-xs mt-1">行程</span></a>
-        <a href="profile.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="user"></i><span class="text-xs mt-1">我的</span></a>
-        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings"></i><span class="text-xs mt-1">管理</span></a>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3">
+        <a href="index.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] mt-1">探索</span></a>
+        <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar" class="w-5 h-5"></i><span class="text-[10px] mt-1">行程</span></a>
+        <a href="profile.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] mt-1">我的</span></a>
+        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[10px] mt-1">管理</span></a>
     </nav>
     <script>
         let bal = parseInt(localStorage.getItem('user_bal') || 0);
