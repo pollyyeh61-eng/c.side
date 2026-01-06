@@ -8,46 +8,84 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f9fafb; }
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f9fafb; user-select: none; }
         .page { display: none; }
         .page.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .fab-btn { box-shadow: 0 15px 30px -5px rgba(244, 63, 94, 0.4); }
+        /* 確保底部導航不遮擋內容 */
+        .content-area { padding-bottom: 120px; }
     </style>
 </head>
-<body class="pb-24">
+<body>
 
     <div id="page-home" class="page active">
         <header class="bg-white p-6 sticky top-0 z-50 border-b">
-            <h1 class="text-rose-500 font-black text-xl italic mb-4 uppercase tracking-tighter">Beauty Life</h1>
+            <h1 class="text-rose-500 font-black text-xl italic mb-4 tracking-tighter">BEAUTY LIFE</h1>
             <div class="relative">
                 <input type="text" placeholder="搜尋 10 家精選服務..." class="w-full bg-gray-100 rounded-2xl py-3 px-12 text-sm outline-none">
                 <i data-lucide="search" class="absolute left-4 top-3.5 w-4 h-4 text-gray-400"></i>
             </div>
         </header>
-        <main class="p-6 space-y-5" id="shop-list-container"></main>
+        <main class="p-6 space-y-5 content-area" id="shop-list-container">
+            </main>
+    </div>
+
+    <div id="page-shop-detail" class="page bg-white min-h-screen">
+        <nav class="p-4 flex items-center border-b sticky top-0 bg-white z-50">
+            <button onclick="navigateTo('page-home')"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+            <span class="ml-4 font-bold text-lg" id="detail-header-title">店家詳情</span>
+        </nav>
+        <div class="content-area">
+            <div id="detail-images" class="flex gap-4 p-6 overflow-x-auto no-scrollbar">
+                </div>
+            <div class="px-6 space-y-6">
+                <div>
+                    <h2 id="detail-name" class="text-3xl font-black text-gray-800"></h2>
+                    <div id="detail-tags" class="mt-2"></div>
+                </div>
+                <section class="space-y-4">
+                    <div class="bg-gray-50 p-5 rounded-3xl">
+                        <h3 class="font-bold text-gray-800 mb-2 border-l-4 border-rose-400 pl-3">服務介紹</h3>
+                        <p id="detail-services" class="text-sm text-gray-500 leading-relaxed whitespace-pre-wrap"></p>
+                    </div>
+                    <div class="bg-gray-50 p-5 rounded-3xl">
+                        <h3 class="font-bold text-gray-800 mb-2 border-l-4 border-rose-400 pl-3">產品介紹</h3>
+                        <p id="detail-products" class="text-sm text-gray-500 leading-relaxed whitespace-pre-wrap"></p>
+                    </div>
+                    <div class="bg-rose-50 p-6 rounded-[2.5rem]">
+                        <h3 class="font-bold text-rose-500 mb-2 flex items-center"><i data-lucide="star" class="w-4 h-4 mr-2"></i> 套餐內容</h3>
+                        <p id="detail-packages" class="text-sm text-rose-600 font-medium whitespace-pre-wrap"></p>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div class="fixed bottom-24 left-0 right-0 px-8 z-50">
+            <button onclick="handleCreateBooking()" class="fab-btn block w-full bg-slate-900 text-white py-4 rounded-full font-bold text-center border-2 border-slate-800 active:scale-95 transition">立即預約服務</button>
+        </div>
     </div>
 
     <div id="page-orders" class="page">
         <header class="p-6 bg-white border-b font-black text-xl">我的行程</header>
-        <div class="p-6 space-y-4" id="order-list"></div>
+        <div class="p-6 space-y-4 content-area" id="order-list-container">
+            </div>
     </div>
 
     <div id="page-profile" class="page">
         <div id="auth-section" class="p-8 mt-10">
-            <h2 class="text-3xl font-black mb-8">手機快速登入</h2>
-            <input type="tel" id="user-phone" placeholder="0912-345-678" class="w-full p-4 rounded-2xl bg-white shadow-sm mb-4 outline-none">
-            <button onclick="handleLogin()" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold">進入會員中心</button>
+            <h2 class="text-3xl font-black mb-8 text-gray-800">登入美感生活</h2>
+            <input type="tel" id="user-phone" placeholder="輸入手機號碼" class="w-full p-4 rounded-2xl bg-white shadow-sm mb-4 outline-none border-none">
+            <button onclick="handleLogin()" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold shadow-lg">進入會員中心</button>
         </div>
         <div id="user-section" class="hidden">
-            <div class="bg-rose-500 p-10 pt-16 text-white rounded-b-[3rem] shadow-lg">
+            <div class="bg-rose-500 p-10 pt-16 text-white rounded-b-[3rem] shadow-lg relative">
                 <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-rose-500 shadow-xl"><i data-lucide="user"></i></div>
-                    <div><h2 id="display-phone" class="font-black text-xl">用戶</h2><p class="text-xs opacity-70">黃金會員</p></div>
+                    <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-rose-500"><i data-lucide="user"></i></div>
+                    <div><h2 id="display-phone" class="font-black text-xl">用戶</h2><p class="text-xs opacity-70">Gold Member</p></div>
                 </div>
                 <div class="mt-8 grid grid-cols-2 gap-4">
-                    <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md"><p class="text-[10px] opacity-80">餘額</p><p id="wallet-balance" class="text-2xl font-black">$ 0</p></div>
-                    <button onclick="addCredit()" class="bg-white text-rose-500 p-4 rounded-2xl font-bold">儲值 $1000</button>
+                    <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md text-center"><p class="text-[10px] opacity-80">餘額</p><p id="wallet-balance" class="text-2xl font-black">$ 0</p></div>
+                    <button onclick="addCredit()" class="bg-white text-rose-500 p-4 rounded-2xl font-bold shadow-lg">儲值 $1000</button>
                 </div>
             </div>
         </div>
@@ -55,43 +93,48 @@
 
     <div id="page-admin" class="page bg-slate-50 min-h-screen">
         <header class="p-6 bg-white border-b flex justify-between items-center sticky top-0 z-50">
-            <h2 class="font-black text-xl italic text-slate-800">ADMIN</h2>
-            <button onclick="logoutAdmin()" class="text-[10px] text-rose-500 font-bold">登出後台</button>
+            <h2 class="font-black text-xl italic text-slate-800">ADMIN PANEL</h2>
+            <button id="logout-admin-btn" onclick="logoutAdmin()" class="hidden text-[10px] text-rose-500 font-bold border border-rose-200 px-3 py-1 rounded-full">切換帳號</button>
         </header>
+
         <div id="admin-login-box" class="p-10 text-center">
-            <input type="password" id="admin-code-input" placeholder="代碼 0000" class="w-32 text-center text-3xl p-4 bg-white rounded-3xl mb-8 focus:ring-2 focus:ring-rose-400 border-none shadow-inner outline-none">
-            <button onclick="handleAdminAuth()" class="w-full bg-slate-900 text-white py-4 rounded-3xl font-bold shadow-xl">進入管理後台</button>
+            <p class="text-xs text-gray-400 mb-6 font-bold uppercase tracking-widest">請輸入管理代碼</p>
+            <input type="password" id="admin-code-input" placeholder="0000" class="w-40 text-center text-3xl p-4 bg-white rounded-3xl mb-8 border-none shadow-inner outline-none">
+            <button onclick="handleAdminAuth()" class="w-full bg-slate-900 text-white py-4 rounded-3xl font-bold shadow-xl">驗證身份</button>
         </div>
-        <div id="admin-editor-box" class="hidden p-4 space-y-6 pb-32">
-            <div id="super-admin-tools" class="hidden bg-white p-5 rounded-[2rem] shadow-sm">
-                <label class="text-[10px] font-bold text-gray-400 block mb-2">管理店家切換</label>
-                <select id="admin-shop-selector" onchange="switchAdminShop(this.value)" class="w-full p-2 bg-gray-50 rounded-xl text-sm border-none"></select>
+
+        <div id="admin-editor-box" class="hidden p-4 space-y-6 content-area">
+            <div id="super-admin-tools" class="hidden bg-white p-5 rounded-[2rem] shadow-sm border-2 border-rose-100">
+                <label class="text-[10px] font-bold text-rose-400 block mb-2 uppercase">總管理員模式：切換店家</label>
+                <select id="admin-shop-selector" onchange="switchAdminTarget(this.value)" class="w-full p-2 bg-gray-50 rounded-xl text-sm border-none font-bold text-slate-700"></select>
             </div>
-            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4">
-                <h3 class="font-bold text-xs text-gray-400">照片網址 (五張)</h3>
-                <div id="photo-inputs" class="space-y-2">
-                    <input type="text" data-key="p1" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-100 rounded-xl text-[10px]" placeholder="主圖 URL">
-                    <input type="text" data-key="p2" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-100 rounded-xl text-[10px]" placeholder="照片 2">
-                    <input type="text" data-key="p3" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-100 rounded-xl text-[10px]" placeholder="照片 3">
-                    <input type="text" data-key="p4" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-100 rounded-xl text-[10px]" placeholder="照片 4">
-                    <input type="text" data-key="p5" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-100 rounded-xl text-[10px]" placeholder="照片 5">
+
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-6">
+                <div>
+                    <h3 class="font-bold text-xs text-gray-400 mb-4 flex justify-between">照片管理 (URL) <span class="text-emerald-500 italic">Auto-Saving</span></h3>
+                    <div id="photo-inputs-container" class="space-y-2">
+                        <input type="text" data-key="p1" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 1 (主圖)">
+                        <input type="text" data-key="p2" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 2">
+                        <input type="text" data-key="p3" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 3">
+                        <input type="text" data-key="p4" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 4">
+                        <input type="text" data-key="p5" oninput="autoSave(this)" class="p-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 5">
+                    </div>
                 </div>
+                <div class="space-y-4">
+                    <textarea data-key="services" oninput="autoSave(this)" id="adm-services" placeholder="服務介紹" class="w-full h-24 p-3 bg-gray-50 rounded-xl text-sm border-none"></textarea>
+                    <textarea data-key="products" oninput="autoSave(this)" id="adm-products" placeholder="產品介紹" class="w-full h-24 p-3 bg-gray-50 rounded-xl text-sm border-none"></textarea>
+                    <textarea data-key="packages" oninput="autoSave(this)" id="adm-packages" placeholder="套餐介紹" class="w-full h-24 p-3 bg-rose-50 text-rose-500 rounded-xl text-sm border-none font-bold"></textarea>
+                </div>
+                <button onclick="finalPublish()" class="w-full bg-slate-900 text-white py-4 rounded-full font-bold shadow-xl">同步更新至雲端資料庫</button>
             </div>
-            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4">
-                <h3 class="font-bold text-xs text-gray-400">詳情內容</h3>
-                <textarea data-key="services" oninput="autoSave(this)" id="adm-services" placeholder="服務介紹" class="w-full h-24 p-3 bg-gray-100 rounded-xl text-sm border-none"></textarea>
-                <textarea data-key="products" oninput="autoSave(this)" id="adm-products" placeholder="產品介紹" class="w-full h-24 p-3 bg-gray-100 rounded-xl text-sm border-none"></textarea>
-                <textarea data-key="packages" oninput="autoSave(this)" id="adm-packages" placeholder="套餐介紹" class="w-full h-24 p-3 bg-rose-50 text-rose-500 rounded-xl text-sm border-none"></textarea>
-            </div>
-            <button onclick="finalPublish()" class="w-full bg-emerald-500 text-white py-4 rounded-full font-bold shadow-xl">發布同步至雲端</button>
         </div>
     </div>
 
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-[60]">
-        <button onclick="navigateTo('page-home')" class="nav-btn text-rose-500 flex flex-col items-center" data-target="page-home"><i data-lucide="home"></i><span class="text-[10px] font-bold">探索</span></button>
-        <button onclick="navigateTo('page-orders')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-orders"><i data-lucide="calendar"></i><span class="text-[10px] font-bold">行程</span></button>
-        <button onclick="navigateTo('page-profile')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-profile"><i data-lucide="user"></i><span class="text-[10px] font-bold">我的</span></button>
-        <button onclick="navigateTo('page-admin')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-admin"><i data-lucide="settings"></i><span class="text-[10px] font-bold">管理</span></button>
+        <button onclick="navigateTo('page-home')" class="nav-btn flex flex-col items-center" data-target="page-home"><i data-lucide="home"></i><span class="text-[10px] font-bold">探索</span></button>
+        <button onclick="navigateTo('page-orders')" class="nav-btn flex flex-col items-center" data-target="page-orders"><i data-lucide="calendar"></i><span class="text-[10px] font-bold">行程</span></button>
+        <button onclick="navigateTo('page-profile')" class="nav-btn flex flex-col items-center" data-target="page-profile"><i data-lucide="user"></i><span class="text-[10px] font-bold">我的</span></button>
+        <button onclick="navigateTo('page-admin')" class="nav-btn flex flex-col items-center" data-target="page-admin"><i data-lucide="settings"></i><span class="text-[10px] font-bold">管理</span></button>
     </nav>
 
     <script type="module">
@@ -102,91 +145,137 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 10家 Demo 資料
+        // 鎖定的 10 家 Demo 店家
         const demoShops = [
-            { id: "001", name: "Holy Hair Salon", cat: "美髮", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400", services: "韓系燙髮、結構護理", products: "日本資生堂髮品", packages: "燙髮套餐 $3280" },
-            { id: "002", name: "靜謐 SPA 會館", cat: "SPA", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400", services: "芳療精油按摩", products: "法國歐舒丹", packages: "精油放鬆 $1800" },
-            { id: "003", name: "小清新美甲設計", cat: "美甲", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=400", services: "手部凝膠彩繪", products: "日本Presto", packages: "任選設計 $1200" },
-            { id: "004", name: "醫美微調專家", cat: "醫美", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=400", services: "皮秒、煥膚", products: "醫療級保養", packages: "光感療程 $4500" },
-            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400", services: "復古油頭修容", products: "Reuzel 髮油", packages: "理髮修容 $900" },
-            { id: "006", name: "東方韻味美容", cat: "SPA", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400", services: "臉部撥筋、漢方", products: "草本精萃", packages: "漢方美顏 $1500" },
-            { id: "007", name: "氧氣健身工坊", cat: "健身", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400", services: "1對1私人教練", products: "高標器材", packages: "三堂體驗 $2400" },
-            { id: "008", name: "奢華睫毛沙龍", cat: "美甲", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=400", services: "嫁接睫毛", products: "認證黑膠", packages: "輕羽接睫 $1300" },
-            { id: "009", name: "療癒系手作香氛", cat: "SPA", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=400", services: "專屬調香課程", products: "英國精油", packages: "調香課程 $1980" },
-            { id: "010", name: "夢幻婚禮秘書", cat: "美髮", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=400", services: "新娘造型設計", products: "專櫃彩妝", packages: "造型設計 $3600" }
+            { id: "001", name: "Holy Hair Salon", cat: "美髮", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400", services: "韓系燙髮、結構護理、專業洗剪", products: "日本資生堂髮品", packages: "韓系燙髮套餐 $3,280\n人氣剪髮 $1,200" },
+            { id: "002", name: "靜謐 SPA 會館", cat: "SPA", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400", services: "精油按摩、深層組織修復", products: "法國歐舒丹精油", packages: "芳療放鬆 90min $1,800" },
+            { id: "003", name: "小清新美甲設計", cat: "美甲", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=400", services: "手部凝膠、日系彩繪", products: "日本 Presto 凝膠", packages: "手部設計 $1,200" },
+            { id: "004", name: "醫美微調專家", cat: "醫美", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=400", services: "皮秒、煥膚、保養", products: "醫學美容等級產品", packages: "光感療程 $4,500" },
+            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400", services: "復古油頭、專業修容", products: "美國 Reuzel", packages: "理髮修容套餐 $900" },
+            { id: "006", name: "東方韻味美容", cat: "SPA", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400", services: "臉部撥筋、漢方保養", products: "天然草本萃取", packages: "漢方美顏 $1,500" },
+            { id: "007", name: "氧氣健身工坊", cat: "健身", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400", services: "私人教練、皮拉提斯", products: "頂級重訓設備", packages: "體驗課程 3堂 $2,400" },
+            { id: "008", name: "奢華睫毛沙龍", cat: "美甲", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=400", services: "3D/6D 睫毛嫁接", products: "低敏黑膠", packages: "輕羽接睫 $1,300" },
+            { id: "009", name: "療癒系手作香氛", cat: "SPA", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=400", services: "職人調香、香水手作", products: "進口植物精油", packages: "專屬調香 $1,980" },
+            { id: "010", name: "夢幻婚禮秘書", cat: "美髮", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=400", services: "新娘妝髮、婚禮整體設計", products: "頂級化妝品牌", packages: "造型設計 $3,600" }
         ];
 
-        let activeAdminShopId = '';
+        let activeAdminId = ''; 
+        let currentShop = null; // 詳情頁對象
+        let myBookings = JSON.parse(localStorage.getItem('my_bookings') || '[]');
 
-        // --- 核心：持久化導覽 (重新整理不跳走) ---
+        // --- 持久化導覽 ---
         window.navigateTo = (id) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active');
+            
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.toggle('text-rose-500', btn.dataset.target === id);
-                btn.classList.toggle('text-gray-300', btn.dataset.target !== id);
+                const isActive = btn.dataset.target === id;
+                btn.classList.toggle('text-rose-500', isActive);
+                btn.classList.toggle('text-gray-300', !isActive);
             });
-            localStorage.setItem('current_page', id);
+            localStorage.setItem('last_active_page', id);
         };
 
-        // --- 核心：Demo渲染 ---
-        const renderHome = () => {
-            const container = document.getElementById('shop-list-container');
-            container.innerHTML = demoShops.map(s => `
-                <div class="bg-white p-4 rounded-[2.5rem] flex gap-5 shadow-sm border border-gray-50">
+        // --- 首頁渲染 ---
+        const initHome = () => {
+            const list = document.getElementById('shop-list-container');
+            list.innerHTML = demoShops.map(s => `
+                <div onclick="openDetailPage('${s.id}')" class="bg-white p-4 rounded-[2.5rem] flex gap-5 shadow-sm border border-gray-50 active:scale-95 transition">
                     <img src="${s.img}" class="w-24 h-24 rounded-[1.8rem] object-cover bg-gray-100">
                     <div class="flex-1 py-1 flex flex-col justify-center">
                         <h3 class="font-bold text-gray-800 text-lg">${s.name}</h3>
-                        <p class="text-[10px] text-gray-400 mt-1">${s.services}</p>
+                        <p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${s.services}</p>
                         <div class="mt-3"><span class="text-[9px] bg-rose-50 text-rose-500 px-3 py-1 rounded-full font-black uppercase">${s.cat}</span></div>
                     </div>
                 </div>
             `).join('');
         };
 
-        // --- 核心：管理後台 (支援 Auto-Save 與 記憶登入) ---
+        // --- 店家詳情 (第二層) ---
+        window.openDetailPage = (id) => {
+            currentShop = demoShops.find(x => x.id === id);
+            document.getElementById('detail-name').innerText = currentShop.name;
+            document.getElementById('detail-services').innerText = currentShop.services;
+            document.getElementById('detail-products').innerText = currentShop.products;
+            document.getElementById('detail-packages').innerText = currentShop.packages;
+            document.getElementById('detail-images').innerHTML = `<img src="${currentShop.img}" class="w-72 h-48 rounded-[2.5rem] object-cover flex-shrink-0 shadow-sm">`;
+            document.getElementById('detail-tags').innerHTML = `<span class="bg-rose-50 text-rose-500 text-xs px-3 py-1 rounded-full font-bold">${currentShop.cat} 精選</span>`;
+            navigateTo('page-shop-detail');
+        };
+
+        // --- 預約連動 ---
+        window.handleCreateBooking = () => {
+            const newBooking = { ...currentShop, orderId: "BK-" + Math.floor(Math.random()*9000+1000), date: "2026-01-06" };
+            myBookings.unshift(newBooking);
+            localStorage.setItem('my_bookings', JSON.stringify(myBookings));
+            renderBookings();
+            alert("預約成功！已加入您的行程中。");
+            navigateTo('page-orders');
+        };
+
+        const renderBookings = () => {
+            const container = document.getElementById('order-list-container');
+            container.innerHTML = myBookings.map(b => `
+                <div class="bg-white p-5 rounded-[2rem] shadow-sm flex gap-4 items-center border border-gray-50">
+                    <div class="w-12 h-12 bg-rose-50 rounded-2xl flex flex-col items-center justify-center text-rose-500 font-bold text-[10px]"><span>NEW</span></div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-gray-800">${b.name}</h4>
+                        <p class="text-[10px] text-gray-400">代碼: ${b.orderId}</p>
+                    </div>
+                    <span class="text-[10px] bg-emerald-50 text-emerald-500 px-3 py-1 rounded-full font-bold">已預約</span>
+                </div>
+            `).join('');
+        };
+
+        // --- 管理後台 (總管功能回歸) ---
         window.handleAdminAuth = () => {
             const code = document.getElementById('admin-code-input').value;
             if (code === '0000' || (parseInt(code) >= 1 && parseInt(code) <= 10)) {
-                localStorage.setItem('admin_token', code);
+                localStorage.setItem('admin_session', code);
                 enterAdminUI(code);
-            } else alert("無效代碼");
+            } else alert("請輸入 0000 或 001-010");
         };
 
         const enterAdminUI = (code) => {
-            activeAdminShopId = code === '0000' ? '001' : code.padStart(3, '0');
             document.getElementById('admin-login-box').classList.add('hidden');
             document.getElementById('admin-editor-box').classList.remove('hidden');
-            if(code === '0000') setupSuperSelector();
-            loadAdminFields();
+            document.getElementById('logout-admin-btn').classList.remove('hidden');
+
+            if (code === '0000') {
+                const sel = document.getElementById('admin-shop-selector');
+                sel.innerHTML = demoShops.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
+                document.getElementById('super-admin-tools').classList.remove('hidden');
+                activeAdminId = sel.value;
+            } else {
+                activeAdminId = code.padStart(3, '0');
+                document.getElementById('super-admin-tools').classList.add('hidden');
+            }
+            loadAdminData();
+        };
+
+        window.switchAdminTarget = (id) => {
+            activeAdminId = id;
+            loadAdminData();
         };
 
         window.logoutAdmin = () => {
-            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_session');
             location.reload();
         };
 
-        const setupSuperSelector = () => {
-            const sel = document.getElementById('admin-shop-selector');
-            sel.innerHTML = demoShops.map(s => `<option value="${s.id}">${s.name} (${s.id})</option>`).join('');
-            document.getElementById('super-admin-tools').classList.remove('hidden');
-        };
-
-        window.switchAdminShop = (id) => { activeAdminShopId = id; loadAdminFields(); };
-
         window.autoSave = (el) => {
-            localStorage.setItem(`save_${activeAdminShopId}_${el.dataset.key}`, el.value);
+            localStorage.setItem(`save_${activeAdminId}_${el.dataset.key}`, el.value);
         };
 
-        const loadAdminFields = async () => {
-            // 從本地暫存或雲端載入
+        const loadAdminData = async () => {
+            // 從本地或雲端載入 (雲端邏輯僅作示範，實務需 await getDoc)
             const fields = ['services', 'products', 'packages'];
             fields.forEach(f => {
-                document.getElementById(`adm-${f}`).value = localStorage.getItem(`save_${activeAdminShopId}_${f}`) || '';
+                document.getElementById(`adm-${f}`).value = localStorage.getItem(`save_${activeAdminId}_${f}`) || '';
             });
-            const pInputs = document.querySelectorAll('.p-input');
-            pInputs.forEach((input, i) => {
-                input.value = localStorage.getItem(`save_${activeAdminShopId}_p${i+1}`) || '';
+            document.querySelectorAll('.p-input').forEach((input, i) => {
+                input.value = localStorage.getItem(`save_${activeAdminId}_p${i+1}`) || '';
             });
         };
 
@@ -197,23 +286,11 @@
                 packages: document.getElementById('adm-packages').value,
                 photos: Array.from(document.querySelectorAll('.p-input')).map(i => i.value)
             };
-            await setDoc(doc(db, "shops", activeAdminShopId), data, { merge: true });
-            alert("雲端同步成功！");
+            await setDoc(doc(db, "shops", activeAdminId), data, { merge: true });
+            alert("雲端同步已完成！");
         };
 
-        // 初始化
-        window.onload = () => {
-            lucide.createIcons();
-            renderHome();
-            // 恢復頁面
-            const lastPage = localStorage.getItem('current_page') || 'page-home';
-            navigateTo(lastPage);
-            // 恢復管理員登入
-            const token = localStorage.getItem('admin_token');
-            if(token) enterAdminUI(token);
-        };
-
-        // 會員邏輯
+        // --- 會員與儲值 ---
         window.handleLogin = () => {
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('user-section').classList.remove('hidden');
@@ -222,6 +299,21 @@
         window.addCredit = () => {
             let b = parseInt(document.getElementById('wallet-balance').innerText.replace('$ ','')) + 1000;
             document.getElementById('wallet-balance').innerText = `$ ${b}`;
+        };
+
+        // --- 頁面啟動 ---
+        window.onload = () => {
+            lucide.createIcons();
+            initHome();
+            renderBookings();
+
+            // 持久化：頁面恢復
+            const lastPage = localStorage.getItem('last_active_page') || 'page-home';
+            navigateTo(lastPage);
+
+            // 持久化：後台登入恢復
+            const session = localStorage.getItem('admin_session');
+            if (session) enterAdminUI(session);
         };
     </script>
 </body>
