@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8"><title>會員中心</title>
+    <script src="https://cdn.tailwindcss.com"></script><script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50 pb-24">
+    <div class="bg-rose-500 p-10 pt-16 text-white rounded-b-[3rem] shadow-lg">
+        <div class="flex items-center gap-4"><div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-rose-500 shadow-xl"><i data-lucide="user"></i></div><div><h2 class="font-black text-xl">美感會員</h2><p class="text-xs opacity-70">Gold Member</p></div></div>
+        <div class="mt-8 grid grid-cols-2 gap-4">
+            <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md"><p class="text-[10px] opacity-80">餘額</p><p id="bal" class="text-2xl font-black">$ 0</p></div>
+            <button onclick="add()" class="bg-white text-rose-500 p-4 rounded-2xl font-bold shadow-lg">儲值 $1000</button>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
+        <a href="index.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="home"></i><span class="text-[10px]">探索</span></a>
+        <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-[10px]">行程</span></a>
+        <a href="profile.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="user"></i><span class="text-[10px]">我的</span></a>
+        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings"></i><span class="text-[10px]">管理</span></a>
+    </nav>
+    <script>
+        let b = parseInt(localStorage.getItem('user_bal') || 0);
+        document.getElementById('bal').innerText = "$ " + b;
+        window.add = () => { b += 1000; localStorage.setItem('user_bal', b); document.getElementById('bal').innerText = "$ " + b; };
+        lucide.createIcons();
+    </script>
+</body>
+</html>

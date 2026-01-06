@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8"><title>管理後台</title>
+    <script src="https://cdn.tailwindcss.com"></script><script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 pb-24">
+    <header class="p-6 bg-white border-b flex justify-between items-center sticky top-0">
+        <h2 class="font-black text-xl italic text-slate-800">ADMIN</h2>
+        <button onclick="logout()" class="text-xs text-rose-500 font-bold">登出</button>
+    </header>
+
+    <div id="login-box" class="p-10 text-center">
+        <input type="password" id="code" placeholder="0000" class="w-40 text-center text-3xl p-4 bg-white rounded-3xl mb-8 border-none shadow-inner outline-none">
+        <button onclick="auth()" class="w-full bg-slate-900 text-white py-4 rounded-3xl font-bold">驗證身份</button>
+    </div>
+
+    <div id="editor-box" class="hidden p-4 space-y-6">
+        <div id="super-tools" class="hidden bg-white p-5 rounded-[2rem] border-2 border-rose-100">
+            <label class="text-[10px] font-bold text-rose-400 block mb-2 uppercase">總管理員模式：切換店家</label>
+            <select id="shop-sel" onchange="switchTarget(this.value)" class="w-full p-2 bg-gray-50 rounded-xl text-sm border-none font-bold"></select>
+        </div>
+        <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4">
+            <h3 class="font-bold text-xs text-gray-400 uppercase">店家內容編輯 (Auto-Save)</h3>
+            <div id="photo-inputs" class="space-y-1">
+                <input type="text" data-key="p1" oninput="save(this)" class="p-in w-full p-2 bg-gray-50 text-[10px] rounded-lg" placeholder="主圖網址">
+                <input type="text" data-key="p2" oninput="save(this)" class="p-in w-full p-2 bg-gray-50 text-[10px] rounded-lg" placeholder="圖片 2">
+            </div>
+            <textarea data-key="srv" oninput="save(this)" id="adm-srv" placeholder="服務介紹" class="w-full h-24 p-3 bg-gray-50 rounded-xl text-sm border-none"></textarea>
+            <textarea data-key="pkg" oninput="save(this)" id="adm-pkg" placeholder="套餐內容" class="w-full h-24 p-3 bg-rose-50 text-rose-500 rounded-xl text-sm border-none font-bold"></textarea>
+            <button onclick="alert('同步完成！')" class="w-full bg-slate-900 text-white py-4 rounded-full font-bold">同步更新雲端</button>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3">
+        <a href="index.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="home"></i><span class="text-[10px]">探索</span></a>
+        <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-[10px]">行程</span></a>
+        <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user"></i><span class="text-[10px]">我的</span></a>
+        <a href="admin.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="settings"></i><span class="text-[10px]">管理</span></a>
+    </nav>
+
+    <script>
+        const shopNames = ["Holy Hair", "靜謐 SPA", "小清新美甲", "醫美微調", "潮流理髮", "東方美容", "氧氣健身", "奢華睫毛", "手作香氛", "夢幻婚秘"];
+        let currentTargetId = '';
+
+        window.auth = () => {
+            const c = document.getElementById('code').value;
+            if(c === '0000' || (parseInt(c) >= 1 && parseInt(c) <= 10)) {
+                localStorage.setItem('adm_session', c);
+                enter(c);
+            } else alert("無效代碼");
+        };
+
+        const enter = (c) => {
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('editor-box').classList.remove('hidden');
+            if(c === '0000') {
+                const sel = document.getElementById('shop-sel');
+                sel.innerHTML = shopNames.map((n, i) => `<option value="${(i+1).toString().padStart(3,'0')}">${n}</option>`).join('');
+                document.getElementById('super-tools').classList.remove('hidden');
+                currentTargetId = sel.value;
+            } else { currentTargetId = c.padStart(3,'0'); }
+            load();
+        };
+
+        window.switchTarget = (id) => { currentTargetId = id; load(); };
+        window.save = (el) => { localStorage.setItem(`save_${currentTargetId}_${el.dataset.key}`, el.value); };
+        const load = () => {
+            document.getElementById('adm-srv').value = localStorage.getItem(`save_${currentTargetId}_srv`) || '';
+            document.getElementById('adm-pkg').value = localStorage.getItem(`save_${currentTargetId}_pkg`) || '';
+        };
+        window.logout = () => { localStorage.removeItem('adm_session'); location.reload(); };
+        window.onload = () => { if(localStorage.getItem('adm_session')) enter(localStorage.getItem('adm_session')); lucide.createIcons(); };
+    </script>
+</body>
+</html>
