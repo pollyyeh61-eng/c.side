@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; }
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f8fafc; -webkit-tap-highlight-color: transparent; }
         .order-card { transition: all 0.3s ease; }
     </style>
 </head>
@@ -52,17 +52,17 @@
             const list = document.getElementById('order-list');
             
             if (orders.length === 0) {
-                list.innerHTML = `<div class="text-center py-20 text-gray-300"><p>尚無行程</p></div>`;
+                list.innerHTML = `<div class="text-center py-20 text-gray-300 flex flex-col items-center"><i data-lucide="clipboard-list" class="w-12 h-12 mb-2"></i><p>尚無行程</p></div>`;
             } else {
                 list.innerHTML = orders.map((order, index) => `
                     <div class="order-card bg-white rounded-[2rem] p-5 shadow-sm border border-gray-50">
                         <div class="flex justify-between items-start mb-4">
                             <div>
-                                <span class="text-[9px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded">SHOP ID: ${order.shopId}</span>
+                                <span class="text-[9px] font-black bg-slate-100 text-slate-500 px-2 py-1 rounded">ID: ${order.shopId}</span>
                                 <h3 class="font-bold text-slate-800 mt-2">${order.shop}</h3>
                                 <p class="text-xs text-gray-400">${order.service}</p>
                             </div>
-                            <p class="font-black text-slate-800">$${order.price}</p>
+                            <p class="font-black text-slate-800">$${order.price.toLocaleString()}</p>
                         </div>
                         ${order.status === '待核銷' ? `
                             <button onclick="openOTP(${index})" class="w-full py-3 bg-rose-500 text-white rounded-xl text-xs font-bold shadow-md">店家現場核銷</button>
@@ -80,7 +80,7 @@
         function openOTP(index) {
             currentOrderIndex = index;
             const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-            document.getElementById('otp-hint').innerText = `請輸入店家 ${orders[index].shop} 的 4 位數代碼`;
+            document.getElementById('otp-hint').innerText = `請店家輸入代碼 (${orders[index].shopId})`;
             document.getElementById('otp-modal').classList.remove('hidden');
         }
 
@@ -90,37 +90,42 @@
         }
 
         function confirmVerify() {
-            const inputOtp = document.getElementById('otp-input').value;
+            const inputOtp = document.getElementById('otp-input').value.trim();
             const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
             const order = orders[currentOrderIndex];
             let userBal = parseInt(localStorage.getItem('user_bal') || '0');
 
-            // 驗證店家代碼
-            if (inputOtp === order.shopId || (inputOtp === "000"+order.shopId.slice(-1))) { 
+            // --- 核心修正：寬鬆匹配邏輯 ---
+            // 只要數值相等 (例如 001 == 0001) 就通過
+            const isCodeCorrect = parseInt(inputOtp) === parseInt(order.shopId);
+
+            if (isCodeCorrect) { 
                 if (userBal >= order.price) {
-                    // 1. 消費者端全額扣款
+                    // 1. 消費者扣款
                     userBal -= order.price;
                     localStorage.setItem('user_bal', userBal);
 
-                    // 2. 後台自動分帳 (80/20)
+                    // 2. 自動分帳 (80% 店家 / 20% 平台)
                     const shopShare = Math.floor(order.price * 0.8);
                     const platformShare = order.price - shopShare;
 
-                    // 店家拿到 80%
+                    // 【核心修正】存入金庫時一律強制使用訂單原始 shopId (例如 "0001")
+                    // 這樣 admin.html 才能用固定的 ID 找到錢
+                    const targetShopId = order.shopId; 
+                    
                     let shopVault = JSON.parse(localStorage.getItem('shop_vault') || '{}');
-                    shopVault[order.shopId] = (shopVault[order.shopId] || 0) + shopShare;
+                    shopVault[targetShopId] = (shopVault[targetShopId] || 0) + shopShare;
                     localStorage.setItem('shop_vault', JSON.stringify(shopVault));
 
-                    // 平台拿到 20%
                     let platformVault = parseFloat(localStorage.getItem('platform_vault') || '0');
                     platformVault += platformShare;
                     localStorage.setItem('platform_vault', platformVault.toString());
 
-                    // 3. 更新訂單狀態為已完工
+                    // 3. 更新訂單狀態
                     order.status = "已完工";
                     localStorage.setItem('my_orders', JSON.stringify(orders));
 
-                    // 4. 寫入消費紀錄 (顯示給客戶看的是全額)
+                    // 4. 消費紀錄
                     let history = JSON.parse(localStorage.getItem('pay_history') || '[]');
                     history.unshift({
                         name: `支付給 ${order.shop}`,
@@ -130,8 +135,7 @@
                     });
                     localStorage.setItem('pay_history', JSON.stringify(history));
 
-                    // 5. 提示訊息 (僅告知核銷成功與扣款全額)
-                    alert(`✅ 核銷成功！\n您已完成支付 $${order.price}。`);
+                    alert(`✅ 核銷成功！\n款項 $${order.price} 已撥付至店家。`);
                     
                     closeOTP();
                     renderOrders();
@@ -139,7 +143,7 @@
                     alert("錢包餘額不足，請先至個人頁面儲值。");
                 }
             } else {
-                alert("店家驗證碼錯誤，核銷失敗。");
+                alert("店家驗證代碼錯誤！");
             }
         }
 
