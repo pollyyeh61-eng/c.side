@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>我的行程</title>
+    <title>我的行程 - 雲端同步版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -15,7 +15,7 @@
 
     <header class="p-6 bg-white sticky top-0 z-40 border-b">
         <h1 class="text-2xl font-black text-slate-800">我的行程</h1>
-        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">核銷與扣款系統</p>
+        <p class="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">核銷與雲端扣款系統</p>
     </header>
 
     <main id="order-list" class="p-6 space-y-4"></main>
@@ -32,7 +32,7 @@
             
             <div class="flex gap-3">
                 <button onclick="closeOTP()" class="flex-1 py-3 text-sm font-bold text-gray-400">取消</button>
-                <button onclick="confirmVerify()" class="flex-1 py-3 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg">確認核銷</button>
+                <button id="btn-verify" class="flex-1 py-3 bg-slate-900 text-white rounded-xl text-sm font-bold shadow-lg">確認核銷</button>
             </div>
         </div>
     </div>
@@ -44,8 +44,79 @@
         <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">管理</span></a>
     </nav>
 
-    <script>
+    <script type="module">
+        // 引入核心橋接器
+        import { cloudSave, cloudGet } from './firebase-bridge.js';
+
         let currentOrderIndex = null;
+
+        // 將函數掛載到 window 以供 HTML 內聯事件呼叫
+        window.openOTP = (index) => {
+            currentOrderIndex = index;
+            const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+            document.getElementById('otp-hint').innerText = `請輸入正確的 4 位數代碼 (${orders[index].shopId})`;
+            document.getElementById('otp-modal').classList.remove('hidden');
+        };
+
+        window.closeOTP = () => {
+            document.getElementById('otp-modal').classList.add('hidden');
+            document.getElementById('otp-input').value = '';
+        };
+
+        async function confirmVerify() {
+            const inputOtp = document.getElementById('otp-input').value.trim();
+            const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
+            const order = orders[currentOrderIndex];
+            let userBal = parseInt(localStorage.getItem('user_bal') || '0');
+
+            if (inputOtp === order.shopId) { 
+                if (userBal >= order.price) {
+                    // 1. 本地扣款邏輯
+                    userBal -= order.price;
+                    localStorage.setItem('user_bal', userBal);
+
+                    const shopShare = Math.floor(order.price * 0.8);
+                    
+                    // 2. 雲端同步核心：更新店家金庫
+                    const shopId = order.shopId;
+                    const cloudVaultAmt = await cloudGet('vaults/' + shopId) || 0;
+                    const newCloudTotal = cloudVaultAmt + shopShare;
+                    
+                    // 同步到 Firebase
+                    await cloudSave('vaults/' + shopId, newCloudTotal);
+                    // 同步到雲端餘額 (假設用戶 ID 為固定值或從 profile 取得)
+                    await cloudSave('users/guest_001/balance', userBal);
+
+                    // 3. 更新本地狀態
+                    let shopVault = JSON.parse(localStorage.getItem('shop_vault') || '{}');
+                    shopVault[shopId] = newCloudTotal; 
+                    localStorage.setItem('shop_vault', JSON.stringify(shopVault));
+
+                    order.status = "已完工";
+                    localStorage.setItem('my_orders', JSON.stringify(orders));
+
+                    let history = JSON.parse(localStorage.getItem('pay_history') || '[]');
+                    history.unshift({
+                        name: `支付給 ${order.shop}`,
+                        amount: order.price,
+                        type: "minus",
+                        date: new Date().toLocaleDateString()
+                    });
+                    localStorage.setItem('pay_history', JSON.stringify(history));
+
+                    alert(`✅ 核銷完成並已同步雲端！\n店家實收：$${shopShare}`);
+                    closeOTP();
+                    renderOrders();
+                } else {
+                    alert("錢包餘額不足！");
+                }
+            } else {
+                alert("驗證錯誤！請輸入完整的 4 位代碼。");
+            }
+        }
+
+        // 綁定按鈕事件
+        document.getElementById('btn-verify').onclick = confirmVerify;
 
         function renderOrders() {
             const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
@@ -71,65 +142,6 @@
                     </div>
                 `).join('');
             lucide.createIcons();
-        }
-
-        function openOTP(index) {
-            currentOrderIndex = index;
-            const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-            document.getElementById('otp-hint').innerText = `請輸入正確的 4 位數代碼 (${orders[index].shopId})`;
-            document.getElementById('otp-modal').classList.remove('hidden');
-        }
-
-        function closeOTP() {
-            document.getElementById('otp-modal').classList.add('hidden');
-            document.getElementById('otp-input').value = '';
-        }
-
-        function confirmVerify() {
-            const inputOtp = document.getElementById('otp-input').value.trim();
-            const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
-            const order = orders[currentOrderIndex];
-            let userBal = parseInt(localStorage.getItem('user_bal') || '0');
-
-            // --- 嚴謹模式：直接字串比對，不補零、不轉數字 ---
-            if (inputOtp === order.shopId) { 
-                if (userBal >= order.price) {
-                    // 扣款與分帳邏輯
-                    userBal -= order.price;
-                    localStorage.setItem('user_bal', userBal);
-
-                    const shopShare = Math.floor(order.price * 0.8);
-                    const platformShare = order.price - shopShare;
-
-                    let shopVault = JSON.parse(localStorage.getItem('shop_vault') || '{}');
-                    shopVault[order.shopId] = (shopVault[order.shopId] || 0) + shopShare;
-                    localStorage.setItem('shop_vault', JSON.stringify(shopVault));
-
-                    let platformVault = parseFloat(localStorage.getItem('platform_vault') || '0');
-                    platformVault += platformShare;
-                    localStorage.setItem('platform_vault', platformVault.toString());
-
-                    order.status = "已完工";
-                    localStorage.setItem('my_orders', JSON.stringify(orders));
-
-                    let history = JSON.parse(localStorage.getItem('pay_history') || '[]');
-                    history.unshift({
-                        name: `支付給 ${order.shop}`,
-                        amount: order.price,
-                        type: "minus",
-                        date: new Date().toLocaleDateString()
-                    });
-                    localStorage.setItem('pay_history', JSON.stringify(history));
-
-                    alert(`✅ 核銷完成！\n店家實收：$${shopShare}`);
-                    closeOTP();
-                    renderOrders();
-                } else {
-                    alert("錢包餘額不足！");
-                }
-            } else {
-                alert("驗證錯誤！請輸入完整的 4 位代碼。");
-            }
         }
 
         window.onload = renderOrders;
