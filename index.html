@@ -13,7 +13,7 @@
         .page.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .fab-btn { box-shadow: 0 15px 30px -5px rgba(244, 63, 94, 0.4); }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .input-focus:focus { ring: 2px; ring-color: #fb7185; outline: none; }
     </style>
 </head>
 <body class="pb-24">
@@ -29,80 +29,93 @@
         <main class="p-6 space-y-5" id="shop-list-container"></main>
     </div>
 
-    <div id="page-shop-detail" class="page bg-white min-h-screen">
-        <nav class="p-4 flex items-center border-b sticky top-0 bg-white z-50">
-            <button onclick="navigateTo('page-home')"><i data-lucide="chevron-left"></i></button>
-            <span class="ml-4 font-bold text-lg">預約服務</span>
-        </nav>
-        <div class="p-6 space-y-6 pb-40">
-            <div id="detail-images" class="w-full h-56 rounded-[2.5rem] bg-gray-100 overflow-hidden shadow-inner"></div>
-            <div>
-                <h2 id="detail-name" class="text-3xl font-black text-gray-800"></h2>
-                <div id="detail-tags" class="mt-2"></div>
-            </div>
-            <div class="space-y-4 text-sm text-gray-500">
-                <div class="bg-gray-50 p-5 rounded-3xl">
-                    <h3 class="font-bold text-gray-800 mb-2">服務介紹</h3>
-                    <p id="detail-services"></p>
-                </div>
-                <div class="bg-rose-50 p-5 rounded-3xl">
-                    <h3 class="font-bold text-rose-500 mb-2 font-bold">推薦套餐</h3>
-                    <p id="detail-packages" class="text-rose-600 font-medium"></p>
-                </div>
-            </div>
-        </div>
-        <div class="fixed bottom-24 left-0 right-0 px-8 z-50">
-            <button onclick="handleBooking()" class="fab-btn block w-full bg-slate-900 text-white py-4 rounded-full font-bold text-center border-2 border-slate-800 active:scale-95 transition">立即確認預約</button>
-        </div>
-    </div>
-
     <div id="page-orders" class="page">
         <header class="p-6 bg-white border-b font-black text-xl">我的行程</header>
-        <div class="p-6 space-y-4" id="order-list">
-            </div>
-        
+        <div class="p-6 space-y-4" id="order-list"></div>
         <div id="modal-order" class="hidden fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-6">
             <div class="bg-white w-full rounded-[3rem] p-8 space-y-4">
                 <h3 class="text-xl font-bold text-gray-800">預約明細</h3>
                 <div class="space-y-2 border-y py-4">
-                    <p class="text-xs text-gray-400">店家名稱：<span id="m-shop" class="text-gray-800 font-bold ml-2"></span></p>
-                    <p class="text-xs text-gray-400">預約代碼：<span id="m-code" class="text-rose-500 font-bold ml-2"></span></p>
-                    <p class="text-xs text-gray-400">預約日期：<span id="m-date" class="text-gray-800 font-bold ml-2">2026-01-06</span></p>
+                    <p class="text-xs text-gray-400">店家：<span id="m-shop" class="text-gray-800 font-bold ml-2"></span></p>
+                    <p class="text-xs text-gray-400">代碼：<span id="m-code" class="text-rose-500 font-bold ml-2"></span></p>
                 </div>
-                <button onclick="closeModal()" class="w-full bg-gray-100 py-3 rounded-2xl font-bold text-gray-400">關閉</button>
+                <button onclick="closeModal()" class="w-full bg-gray-100 py-3 rounded-2xl font-bold">關閉</button>
             </div>
         </div>
     </div>
 
     <div id="page-profile" class="page">
         <div id="auth-section" class="p-8 mt-10">
-            <h2 class="text-3xl font-black mb-8 text-gray-800">開始體驗<br><span class="text-rose-500">美感生活</span></h2>
+            <h2 class="text-3xl font-black mb-8">開始體驗<br><span class="text-rose-500">美感生活</span></h2>
             <input type="tel" id="user-phone" placeholder="輸入手機號碼" class="w-full p-4 rounded-2xl bg-white shadow-sm mb-4 outline-none border-none">
             <button onclick="handleLogin()" class="w-full bg-rose-500 text-white py-4 rounded-2xl font-bold shadow-lg">快速註冊 / 登入</button>
         </div>
         <div id="user-section" class="hidden">
-            <div class="bg-rose-500 p-10 pt-16 text-white rounded-b-[3rem] shadow-lg relative">
+            <div class="bg-rose-500 p-10 pt-16 text-white rounded-b-[3rem] shadow-lg">
                 <div class="flex items-center gap-4">
                     <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-rose-500 shadow-xl"><i data-lucide="user" class="w-8 h-8"></i></div>
                     <div><h2 id="display-phone" class="font-black text-xl">0912-***-456</h2><p class="text-xs opacity-70">黃金會員</p></div>
                 </div>
                 <div class="mt-8 grid grid-cols-2 gap-4">
                     <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md"><p class="text-[10px] opacity-80 mb-1">錢包餘額</p><p id="wallet-balance" class="text-2xl font-black">$ 0</p></div>
-                    <button onclick="addCredit()" class="bg-white text-rose-500 p-4 rounded-2xl font-bold text-center shadow-lg">線上儲值</button>
+                    <button onclick="addCredit()" class="bg-white text-rose-500 p-4 rounded-2xl font-bold text-center">線上儲值</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="page-admin" class="page bg-slate-50 min-h-screen">
-        <header class="p-6 bg-white border-b font-black text-xl">商家管理中心</header>
-        <div class="p-6 space-y-6">
+        <header class="p-6 bg-white border-b flex justify-between items-center sticky top-0 z-50">
+            <h2 class="font-black text-xl tracking-tighter italic">MANAGER CENTER</h2>
+            <span id="admin-status" class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-400 font-bold uppercase">Disconnected</span>
+        </header>
+
+        <div id="admin-login-box" class="p-10 text-center">
+            <p class="text-xs text-gray-400 mb-6 font-bold">請輸入管理代碼 (0000 或 001~010)</p>
+            <input type="password" id="admin-code-input" placeholder="••••" class="w-32 text-center text-3xl p-4 bg-white rounded-3xl border-none shadow-inner mb-8 focus:ring-2 focus:ring-rose-400">
+            <button onclick="handleAdminAuth()" class="w-full bg-slate-900 text-white py-4 rounded-3xl font-bold shadow-xl">進入管理後台</button>
+        </div>
+
+        <div id="admin-editor-box" class="hidden p-4 space-y-6 pb-32">
+            <div id="super-admin-tools" class="hidden bg-white p-5 rounded-[2rem] shadow-sm">
+                <label class="text-[10px] font-bold text-gray-400 block mb-2">切換管理店家</label>
+                <select id="admin-shop-selector" onchange="switchAdminShop(this.value)" class="w-full p-2 bg-gray-50 rounded-xl text-sm border-none"></select>
+            </div>
+
+            <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-3">
+                <h3 class="font-bold text-xs text-gray-400 flex justify-between">
+                    照片管理 (最多五張) <span class="text-emerald-500">Auto-Saving...</span>
+                </h3>
+                <div id="photo-inputs" class="space-y-2">
+                    <input type="text" data-key="p1" oninput="autoSave(this)" class="photo-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 1 (主圖 URL)">
+                    <input type="text" data-key="p2" oninput="autoSave(this)" class="photo-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 2 URL">
+                    <input type="text" data-key="p3" oninput="autoSave(this)" class="photo-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 3 URL">
+                    <input type="text" data-key="p4" oninput="autoSave(this)" class="photo-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 4 URL">
+                    <input type="text" data-key="p5" oninput="autoSave(this)" class="photo-input w-full p-2 bg-gray-50 border rounded-xl text-[10px]" placeholder="照片 5 URL">
+                </div>
+            </div>
+
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4">
-                <h3 class="font-bold text-xs text-gray-400 uppercase tracking-widest">店家內容編輯</h3>
-                <input type="text" id="admin-name" placeholder="店家名稱" class="w-full p-3 bg-gray-50 rounded-xl text-sm border-none">
-                <textarea id="admin-services" placeholder="服務介紹" class="w-full h-24 p-3 bg-gray-50 rounded-xl text-sm border-none"></textarea>
-                <textarea id="admin-packages" placeholder="套餐內容" class="w-full h-24 p-3 bg-rose-50 text-rose-500 rounded-xl text-sm border-none"></textarea>
-                <button onclick="alert('Demo 店家資料已鎖定，真實更新請連動 Firebase')" class="w-full bg-emerald-500 text-white py-4 rounded-3xl font-bold shadow-xl">儲存變更</button>
+                <h3 class="font-bold text-xs text-gray-400">詳情內容編輯</h3>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 ml-2">服務介紹</label>
+                    <textarea data-key="services" oninput="autoSave(this)" id="adm-services" class="w-full h-24 p-4 bg-gray-50 rounded-2xl text-sm border-none mt-1"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-slate-400 ml-2">產品介紹</label>
+                    <textarea data-key="products" oninput="autoSave(this)" id="adm-products" class="w-full h-24 p-4 bg-gray-50 rounded-2xl text-sm border-none mt-1"></textarea>
+                </div>
+                <div>
+                    <label class="text-[10px] font-bold text-rose-400 ml-2">套餐介紹</label>
+                    <textarea data-key="packages" oninput="autoSave(this)" id="adm-packages" class="w-full h-24 p-4 bg-rose-50 text-rose-500 rounded-2xl text-sm border-none mt-1"></textarea>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button onclick="resetToLocal()" class="flex-1 bg-white border-2 border-slate-200 py-4 rounded-full font-bold text-slate-400 text-sm">還原暫存</button>
+                <button onclick="finalPublish()" class="flex-[2] bg-slate-900 text-white py-4 rounded-full font-bold shadow-2xl flex items-center justify-center">
+                    <i data-lucide="cloud-upload" class="w-4 h-4 mr-2"></i> 發布至雲端資料庫
+                </button>
             </div>
         </div>
     </div>
@@ -114,104 +127,128 @@
         <button onclick="navigateTo('page-admin')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-admin"><i data-lucide="settings"></i><span class="text-[10px] font-bold">管理</span></button>
     </nav>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot, getDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        const firebaseConfig = { projectId: "holyhairsalon-f73bf" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
         lucide.createIcons();
-        let currentShop = null;
-        let myOrders = [];
-        let balance = 0;
 
-        const demoData = [
-            { id: "001", name: "Holy Hair Salon", cat: "美髮", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600", services: "韓系氣墊燙、專業剪髮", packages: "燙髮套餐: $3,280" },
-            { id: "002", name: "靜謐 SPA 會館", cat: "SPA", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600", services: "精油深層放鬆、瑞典按摩", packages: "舒壓 90min: $1,800" },
-            { id: "003", name: "小清新美甲設計", cat: "美甲", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=600", services: "手部凝膠、日系彩繪", packages: "任選彩繪: $1,200" },
-            { id: "004", name: "醫美微調專家", cat: "醫美", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600", services: "皮秒雷射、美肌保養", packages: "光感煥膚療程: $4,500" },
-            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600", services: "復古油頭、專業修容", packages: "理髮+修容: $900" },
-            { id: "006", name: "東方韻味美容", cat: "SPA", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600", services: "臉部撥筋、漢方經絡", packages: "漢方美顏 60min: $1,500" },
-            { id: "007", name: "氧氣健身工坊", cat: "健身", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600", services: "1對1教練、皮拉提斯", packages: "體驗課程 3堂: $2,400" },
-            { id: "008", name: "奢華睫毛沙龍", cat: "美甲", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=600", services: "3D嫁接、6D爆濃睫毛", packages: "150根輕羽接睫: $1,300" },
-            { id: "009", name: "療癒系手作香氛", cat: "SPA", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600", services: "職人香水課程、調香", packages: "專屬調香課程: $1,980" },
-            { id: "010", name: "夢幻婚禮秘書", cat: "美髮", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=600", services: "新娘造型、整體設計", packages: "單一妝髮設計: $3,600" }
-        ];
+        let activeShopId = '';
+        let isSuperAdmin = false;
 
+        // --- 全局導覽 ---
         window.navigateTo = (id) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                const active = btn.dataset.target === id;
-                btn.classList.toggle('text-rose-500', active);
-                btn.classList.toggle('text-gray-300', !active);
+                btn.classList.toggle('text-rose-500', btn.dataset.target === id);
+                btn.classList.toggle('text-gray-300', btn.dataset.target !== id);
             });
-            window.scrollTo(0,0);
         };
 
-        // 渲染首頁
-        const list = document.getElementById('shop-list-container');
-        demoData.forEach(s => {
-            list.innerHTML += `
-                <div onclick="openDetail('${s.id}')" class="bg-white p-4 rounded-[2.5rem] flex gap-5 shadow-sm border border-gray-50 active:scale-95 transition">
-                    <img src="${s.img}" class="w-24 h-24 rounded-[1.8rem] object-cover bg-gray-100">
-                    <div class="flex-1 py-1 flex flex-col justify-center">
-                        <h3 class="font-bold text-gray-800 text-lg">${s.name}</h3>
-                        <p class="text-[10px] text-gray-400 mt-1">${s.services}</p>
-                        <div class="mt-3"><span class="text-[9px] bg-rose-50 text-rose-500 px-3 py-1 rounded-full font-black uppercase tracking-wider">${s.cat}</span></div>
-                    </div>
-                </div>`;
-        });
-
-        window.openDetail = (id) => {
-            currentShop = demoData.find(x => x.id === id);
-            document.getElementById('detail-name').innerText = currentShop.name;
-            document.getElementById('detail-services').innerText = currentShop.services;
-            document.getElementById('detail-packages').innerText = currentShop.packages;
-            document.getElementById('detail-images').innerHTML = `<img src="${currentShop.img}" class="w-full h-full object-cover">`;
-            navigateTo('page-shop-detail');
+        // --- 管理驗證與切換 ---
+        window.handleAdminAuth = () => {
+            const code = document.getElementById('admin-code-input').value;
+            if (code === '0000') {
+                isSuperAdmin = true;
+                activeShopId = '001';
+                setupSuperAdmin();
+            } else if (parseInt(code) >= 1 && parseInt(code) <= 10) {
+                isSuperAdmin = false;
+                activeShopId = code.padStart(3, '0');
+            } else {
+                return alert("無效的代碼，請輸入 0000 或 001-010");
+            }
+            enterEditor();
         };
 
-        // 預約邏輯連動
-        window.handleBooking = () => {
-            const order = { ...currentShop, orderId: "HB" + Math.floor(Math.random()*9000+1000) };
-            myOrders.unshift(order);
-            renderOrders();
-            alert(`預約成功！\n您的預約代碼是：${order.orderId}`);
-            navigateTo('page-orders');
-        };
-
-        function renderOrders() {
-            const oList = document.getElementById('order-list');
-            oList.innerHTML = myOrders.map(o => `
-                <div onclick="showOrderDetail('${o.orderId}')" class="bg-white p-5 rounded-[2rem] shadow-sm flex gap-4 items-center active:scale-95 transition">
-                    <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 font-bold text-[10px]">NEW</div>
-                    <div class="flex-1">
-                        <h4 class="font-bold text-gray-800">${o.name}</h4>
-                        <p class="text-[10px] text-gray-400">點擊查看預約明細</p>
-                    </div>
-                    <span class="text-[10px] bg-emerald-50 text-emerald-500 px-3 py-1 rounded-full font-bold">已預約</span>
-                </div>
-            `).join('');
+        function setupSuperAdmin() {
+            const selector = document.getElementById('admin-shop-selector');
+            selector.innerHTML = Array.from({length: 10}, (_, i) => {
+                const id = (i + 1).toString().padStart(3, '0');
+                return `<option value="${id}">管理店家 ${id}</option>`;
+            }).join('');
+            document.getElementById('super-admin-tools').classList.remove('hidden');
         }
 
-        window.showOrderDetail = (orderId) => {
-            const order = myOrders.find(x => x.orderId === orderId);
-            document.getElementById('m-shop').innerText = order.name;
-            document.getElementById('m-code').innerText = order.orderId;
-            document.getElementById('modal-order').classList.remove('hidden');
+        window.switchAdminShop = (id) => {
+            activeShopId = id;
+            loadShopData();
         };
 
-        window.closeModal = () => document.getElementById('modal-order').classList.add('hidden');
+        function enterEditor() {
+            document.getElementById('admin-login-box').classList.add('hidden');
+            document.getElementById('admin-editor-box').classList.remove('hidden');
+            document.getElementById('admin-status').innerText = `Connected: ${activeShopId}`;
+            document.getElementById('admin-status').classList.replace('text-slate-400', 'text-emerald-500');
+            loadShopData();
+        }
 
-        // 會員邏輯
+        // --- 核心儲存邏輯 (Auto-Save + LocalStorage + Cloud) ---
+        window.autoSave = (el) => {
+            const key = `temp_${activeShopId}_${el.dataset.key}`;
+            localStorage.setItem(key, el.value);
+            console.log(`Auto-saved: ${key}`);
+        };
+
+        async function loadShopData() {
+            // 1. 優先從雲端抓
+            const docRef = doc(db, "shops", activeShopId);
+            const snap = await getDoc(docRef);
+            let data = snap.exists() ? snap.data() : { photos: [], services: '', products: '', packages: '' };
+
+            // 2. 填充欄位 (如果有 localStorage 暫存則提示)
+            const fields = ['services', 'products', 'packages'];
+            fields.forEach(f => {
+                const local = localStorage.getItem(`temp_${activeShopId}_${f}`);
+                document.getElementById(`adm-${f}`).value = local || data[f] || '';
+            });
+
+            const photoInputs = document.querySelectorAll('.photo-input');
+            photoInputs.forEach((input, i) => {
+                const local = localStorage.getItem(`temp_${activeShopId}_p${i+1}`);
+                input.value = local || (data.photos && data.photos[i]) || '';
+            });
+        }
+
+        window.finalPublish = async () => {
+            const photos = Array.from(document.querySelectorAll('.photo-input')).map(i => i.value);
+            const data = {
+                photos: photos,
+                services: document.getElementById('adm-services').value,
+                products: document.getElementById('adm-products').value,
+                packages: document.getElementById('adm-packages').value,
+                updatedAt: new Date().getTime()
+            };
+
+            try {
+                await setDoc(doc(db, "shops", activeShopId), data, { merge: true });
+                alert(`店家 ${activeShopId} 資料已同步至雲端！暫存已轉為永久儲存。`);
+            } catch (e) {
+                alert("雲端儲存失敗，請檢查網路。");
+            }
+        };
+
+        window.resetToLocal = () => {
+            if(confirm("確定要放棄目前輸入，還原至上次雲端版本嗎？")) {
+                const fields = ['services', 'products', 'packages', 'p1', 'p2', 'p3', 'p4', 'p5'];
+                fields.forEach(f => localStorage.removeItem(`temp_${activeShopId}_${f}`));
+                loadShopData();
+            }
+        };
+
+        // --- 基礎功能連動 (維持原本 Login/Balance) ---
         window.handleLogin = () => {
-            const phone = document.getElementById('user-phone').value;
-            if(!phone) return alert('請輸入手機號碼');
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('user-section').classList.remove('hidden');
-            document.getElementById('display-phone').innerText = phone;
+            document.getElementById('display-phone').innerText = document.getElementById('user-phone').value;
         };
-
         window.addCredit = () => {
-            balance += 1000;
-            document.getElementById('wallet-balance').innerText = `$ ${balance}`;
-            alert('儲值成功 $1,000！');
+            let b = parseInt(document.getElementById('wallet-balance').innerText.replace('$ ','')) + 1000;
+            document.getElementById('wallet-balance').innerText = `$ ${b}`;
         };
     </script>
 </body>
