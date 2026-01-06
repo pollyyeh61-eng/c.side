@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>店家後台系統</title>
+    <title>店家後台系統 - Debug 版</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; background: #f1f5f9; -webkit-tap-highlight-color: transparent; }
-        .input-focus:focus { ring: 2px; ring-color: #fb7185; outline: none; border-color: #fb7185; }
-        .save-flash { animation: flash 0.5s ease-out; }
-        @keyframes flash { 0% { background-color: #f0fdf4; } 100% { background-color: #f8fafc; } }
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f1f5f9; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+        /* 除錯按鈕樣式 */
+        #debug-console { position: fixed; bottom: 80px; right: 20px; z-index: 9999; }
     </style>
 </head>
 <body class="pb-24">
@@ -72,9 +71,15 @@
                 <input type="text" data-key="img1" oninput="save(this)" class="shop-input w-full p-3 bg-gray-50 rounded-xl text-xs border-none" placeholder="圖片 URL">
                 <textarea data-key="srv" oninput="save(this)" placeholder="服務介紹" class="shop-input w-full h-24 p-4 bg-gray-50 rounded-2xl text-xs border-none"></textarea>
                 <input type="text" data-key="pkg" oninput="save(this)" class="shop-input w-full p-4 bg-rose-50 text-rose-600 rounded-2xl text-xs border-none font-bold" placeholder="套餐定價">
-                <span id="save-indicator" class="text-[9px] text-emerald-500 font-bold uppercase tracking-tighter">System Ready</span>
+                <span id="save-indicator" class="text-[9px] text-emerald-500 font-bold">System Ready</span>
             </div>
         </div>
+    </div>
+
+    <div id="debug-console">
+        <button onclick="debugData()" class="bg-red-600 text-white p-4 rounded-full shadow-2xl animate-bounce">
+            <i data-lucide="bug" class="w-6 h-6"></i>
+        </button>
     </div>
 
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
@@ -90,10 +95,25 @@
         let currentRole = '';
         let currentTab = 'dashboard';
 
+        // 🚩 核心：除錯邏輯
+        window.debugData = () => {
+            const vault = localStorage.getItem('shop_vault');
+            const platform = localStorage.getItem('platform_vault');
+            const orders = localStorage.getItem('my_orders');
+            
+            let message = "--- 系統底層資料檢查 ---\n\n";
+            message += `1. 店家金庫 (shop_vault): \n${vault || '尚未有任何存入'}\n\n`;
+            message += `2. 平台收益 (platform_vault): \n$ ${platform || '0'}\n\n`;
+            message += `3. 訂單總數: ${orders ? JSON.parse(orders).length : 0} 筆\n`;
+            
+            console.log("Debug Vault:", JSON.parse(vault || '{}'));
+            alert(message);
+        };
+
         window.auth = () => {
             const val = document.getElementById('code').value;
             if(val === '0000' || shopConfig[val]) { localStorage.setItem('adm_session', val); enter(val); }
-            else { alert("驗證碼無效！總管請用 0000"); }
+            else { alert("驗證碼無效！"); }
         };
 
         const enter = (val) => {
@@ -128,7 +148,6 @@
             const historyList = document.getElementById('history-list');
             
             if (targetId === 'ALL') {
-                // 總管模式：看到 100% 總和 (含平台抽成)
                 let shopTotal = 0;
                 Object.values(vault).forEach(v => shopTotal += v);
                 const grossTotal = shopTotal + platformGain;
@@ -136,7 +155,6 @@
                 document.getElementById('display-revenue').innerText = `$ ${grossTotal.toLocaleString()}`;
                 document.getElementById('display-sub-val').innerText = `$ ${platformGain.toLocaleString()}`;
                 document.getElementById('rev-title').innerText = "平台收銀總結算 (100%)";
-                document.getElementById('sub-title').innerText = "平台淨手續費收益 (20%)";
                 
                 const payoutBtn = document.getElementById('payout-btn');
                 payoutBtn.innerText = "總部對帳完成";
@@ -145,20 +163,17 @@
                 historyList.innerHTML = Object.entries(shopConfig).map(([id, name]) => {
                     const amt = vault[id] || 0;
                     return `<div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
-                        <div><p class="font-bold text-xs">${name}</p><p class="text-[9px] text-gray-400">店家待撥款 (80%)</p></div>
+                        <div><p class="font-bold text-xs">${name}</p><p class="text-[9px] text-gray-400">待撥款 (80%)</p></div>
                         <div class="text-right">
                             <p class="font-black text-slate-800">$${amt.toLocaleString()}</p>
-                            <button onclick="masterTransfer('${id}', ${amt})" class="text-[9px] text-emerald-500 font-bold uppercase tracking-widest hover:underline">撥款</button>
+                            <button onclick="masterTransfer('${id}', ${amt})" class="text-[9px] text-emerald-500 font-bold uppercase hover:underline">撥款</button>
                         </div>
                     </div>`;
                 }).join('');
             } else {
-                // 店家模式：只看到 80%
                 const amt = vault[targetId] || 0;
                 document.getElementById('display-revenue').innerText = `$ ${amt.toLocaleString()}`;
-                document.getElementById('display-sub-val').innerText = "結算完畢";
                 document.getElementById('rev-title').innerText = `${shopConfig[targetId]} 實得營收 (80%)`;
-                document.getElementById('sub-title').innerText = "款項狀態";
                 
                 const orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
                 const logs = orders.filter(o => o.shopId === targetId && o.status === "已完工");
@@ -168,12 +183,9 @@
                     return `<div class="flex justify-between items-center p-4 bg-white border-b border-gray-50">
                         <div>
                             <p class="font-bold text-xs text-slate-700">${l.service}</p>
-                            <p class="text-[9px] text-gray-300">客戶支付全額: $${l.price.toLocaleString()}</p>
+                            <p class="text-[9px] text-gray-300">原價: $${l.price}</p>
                         </div>
-                        <div class="text-right">
-                            <p class="font-black text-emerald-500">+$${shopNet.toLocaleString()}</p>
-                            <p class="text-[8px] text-gray-400 font-bold">結算 (80%)</p>
-                        </div>
+                        <p class="font-black text-emerald-500">+$${shopNet.toLocaleString()}</p>
                     </div>`;
                 }).join('') || '<p class="text-center py-10 text-gray-300 text-xs italic">尚無核銷紀錄</p>';
             }
@@ -182,18 +194,12 @@
 
         window.masterTransfer = (id, amt) => {
             if(amt <= 0) return alert("無待轉帳餘額");
-            if(confirm(`確認撥款 $${amt} 至 ${shopConfig[id]} 的銀行帳戶？\n(此動作會清空該店後台餘額)`)) {
+            if(confirm(`確認撥款 $${amt}？`)) {
                 let vault = JSON.parse(localStorage.getItem('shop_vault') || '{}');
                 vault[id] = 0;
                 localStorage.setItem('shop_vault', JSON.stringify(vault));
-                alert("撥款成功！款項已匯出。");
                 refreshView();
             }
-        };
-
-        window.requestPayout = () => {
-            if(currentRole === 'master') alert("總管模式：請直接下方點擊撥款給各店家。");
-            else alert("請款申請已送出！資金將於下個撥款日入帳。");
         };
 
         window.save = (el) => { if(targetId !== 'ALL') localStorage.setItem(`save_${targetId}_${el.dataset.key}`, el.value); };
