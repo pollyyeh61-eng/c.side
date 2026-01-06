@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美業 C 端入口平台</title>
+    <title>Holy Hair Salon | 預約平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
         .page { display: none; }
         .page.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -17,11 +19,11 @@
     <div id="page-home" class="page active">
         <header class="bg-white p-4 sticky top-0 z-50 shadow-sm">
             <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center text-red-500">
+                <div class="flex items-center text-rose-500">
                     <i data-lucide="map-pin" class="w-5 h-5 mr-1"></i>
-                    <span class="font-bold text-sm">台北市信義區...</span>
+                    <span class="font-bold text-sm">台北市 (鄰近店家)</span>
                 </div>
-                <div id="user-info" class="text-xs text-gray-400">登入/註冊</div>
+                <div id="auth-status" class="text-xs text-gray-400">載入中...</div>
             </div>
             <div class="relative">
                 <input type="text" placeholder="搜尋美髮、美甲、SPA..." class="w-full bg-gray-100 rounded-full py-2 px-10 focus:outline-none">
@@ -29,9 +31,9 @@
             </div>
         </header>
 
-        <section class="p-4 flex gap-6 overflow-x-auto no-scrollbar bg-white shadow-inner">
+        <section class="p-4 flex gap-6 overflow-x-auto no-scrollbar bg-white">
             <div class="flex flex-col items-center min-w-[60px] cursor-pointer">
-                <div class="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center text-red-500 mb-1"><i data-lucide="scissors"></i></div>
+                <div class="w-12 h-12 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-500 mb-1"><i data-lucide="scissors"></i></div>
                 <span class="text-xs font-medium">美髮</span>
             </div>
             <div class="flex flex-col items-center min-w-[60px] cursor-pointer">
@@ -51,119 +53,138 @@
         <main class="p-4">
             <h2 class="font-bold text-lg mb-4 text-gray-800">附近推薦店家</h2>
             <div id="shop-list" class="space-y-4">
-                <div onclick="navigateTo('page-detail')" class="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100 cursor-pointer">
-                    <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400" class="h-40 w-full object-cover">
-                    <div class="p-3">
-                        <div class="flex justify-between items-center mb-1">
-                            <h3 class="font-bold text-gray-800">Modern Hair Studio</h3>
-                            <span class="text-red-400 text-sm font-bold">★ 4.8</span>
-                        </div>
-                        <p class="text-xs text-gray-500">美髮 · 距離 0.5km · 台北市信義區...</p>
-                        <div class="mt-2 flex gap-2">
-                            <span class="text-[10px] bg-gray-100 px-2 py-0.5 rounded text-gray-600">可收信用卡</span>
-                            <span class="text-[10px] bg-red-50 px-2 py-0.5 rounded text-red-500">今日有位</span>
-                        </div>
-                    </div>
-                </div>
+                <p class="text-center text-gray-400 py-10">讀取資料庫中...</p>
             </div>
         </main>
     </div>
 
     <div id="page-detail" class="page">
-        <nav class="p-4 bg-white flex items-center border-b">
+        <nav class="p-4 bg-white flex items-center border-b sticky top-0 z-50">
             <button onclick="navigateTo('page-home')"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-            <h2 class="ml-4 font-bold text-lg">預約服務 - Modern Hair</h2>
+            <h2 id="current-shop-name" class="ml-4 font-bold text-lg text-gray-800 font-bold">預約服務</h2>
         </nav>
 
         <div class="p-4 space-y-6">
             <section>
-                <h3 class="font-bold mb-3 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-2 text-red-400"></i>選擇服務項目</h3>
-                <div class="grid gap-3">
-                    <label class="flex items-center justify-between p-4 bg-white rounded-xl border-2 border-transparent shadow-sm cursor-pointer has-[:checked]:border-red-400">
+                <h3 class="font-bold mb-3 flex items-center"><i data-lucide="check-circle" class="w-4 h-4 mr-2 text-rose-400"></i>選擇服務</h3>
+                <div id="service-menu" class="grid gap-3">
+                    <label class="flex items-center justify-between p-4 bg-white rounded-xl border shadow-sm cursor-pointer">
                         <div>
-                            <p class="font-medium text-gray-800">基礎洗剪服務</p>
-                            <p class="text-xs text-gray-400">預計 60 分鐘</p>
+                            <p class="font-medium text-gray-800">專業洗剪</p>
+                            <p class="text-xs text-gray-400">60 mins</p>
                         </div>
-                        <div class="text-right">
-                            <p class="text-red-500 font-bold">$800</p>
-                            <input type="radio" name="service" class="hidden" checked>
-                        </div>
-                    </label>
-                    <label class="flex items-center justify-between p-4 bg-white rounded-xl border-2 border-transparent shadow-sm cursor-pointer has-[:checked]:border-red-400">
-                        <div>
-                            <p class="font-medium text-gray-800">深層護髮療程</p>
-                            <p class="text-xs text-gray-400">預計 90 分鐘</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-red-500 font-bold">$1,500</p>
-                            <input type="radio" name="service" class="hidden">
-                        </div>
+                        <p class="text-rose-500 font-bold">$800</p>
+                        <input type="radio" name="service" value="800" class="ml-2">
                     </label>
                 </div>
             </section>
 
             <section>
-                <h3 class="font-bold mb-3 flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-2 text-red-400"></i>選擇預約時間</h3>
-                <div class="bg-white p-4 rounded-xl shadow-sm">
-                    <input type="date" class="w-full mb-4 p-2 bg-gray-50 rounded-lg outline-none border-none">
-                    <div class="grid grid-cols-3 gap-2">
-                        <button class="py-2 rounded-lg border text-sm hover:bg-red-400 hover:text-white transition">10:00</button>
-                        <button class="py-2 rounded-lg border text-sm hover:bg-red-400 hover:text-white transition">11:30</button>
-                        <button class="py-2 rounded-lg border text-sm bg-gray-100 text-gray-300 cursor-not-allowed" disabled>14:00</button>
-                        <button class="py-2 rounded-lg border text-sm hover:bg-red-400 hover:text-white transition">15:30</button>
-                        <button class="py-2 rounded-lg border text-sm hover:bg-red-400 hover:text-white transition">17:00</button>
+                <h3 class="font-bold mb-3 flex items-center"><i data-lucide="calendar" class="w-4 h-4 mr-2 text-rose-400"></i>預約日期與時段</h3>
+                <div class="bg-white p-4 rounded-xl shadow-sm border">
+                    <input type="date" id="booking-date" class="w-full mb-4 p-2 bg-gray-50 rounded-lg outline-none border">
+                    <div id="time-grid" class="grid grid-cols-3 gap-2">
+                        <button class="time-slot py-2 rounded-lg border text-sm hover:bg-rose-400 hover:text-white transition">10:00</button>
+                        <button class="time-slot py-2 rounded-lg border text-sm hover:bg-rose-400 hover:text-white transition">14:30</button>
+                        <button class="time-slot py-2 rounded-lg border text-sm hover:bg-rose-400 hover:text-white transition">16:00</button>
                     </div>
                 </div>
             </section>
         </div>
 
-        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
-            <button onclick="confirmBooking()" class="w-full bg-red-400 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition">
-                確認預約並支付
-            </button>
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t flex items-center justify-between">
+            <span id="total-price" class="text-xl font-bold text-rose-500">$0</span>
+            <button onclick="submitBooking()" class="bg-rose-500 text-white px-8 py-3 rounded-xl font-bold shadow-lg active:scale-95 transition">確認預約</button>
         </div>
     </div>
 
-    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-2 z-50">
-        <button onclick="navigateTo('page-home')" class="flex flex-col items-center text-red-500">
-            <i data-lucide="home" class="w-6 h-6"></i>
-            <span class="text-[10px] mt-1">探索</span>
-        </button>
-        <button class="flex flex-col items-center text-gray-400">
-            <i data-lucide="calendar-days" class="w-6 h-6"></i>
-            <span class="text-[10px] mt-1">訂單</span>
-        </button>
-        <button class="flex flex-col items-center text-gray-400">
-            <i data-lucide="user" class="w-6 h-6"></i>
-            <span class="text-[10px] mt-1">我的</span>
-        </button>
+    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
+        <button onclick="navigateTo('page-home')" class="flex flex-col items-center text-rose-500"><i data-lucide="home" class="w-6 h-6"></i><span class="text-[10px] mt-1">探索</span></button>
+        <button class="flex flex-col items-center text-gray-400"><i data-lucide="calendar" class="w-6 h-6"></i><span class="text-[10px] mt-1">行程</span></button>
+        <button class="flex flex-col items-center text-gray-400"><i data-lucide="user" class="w-6 h-6"></i><span class="text-[10px] mt-1">我的</span></button>
     </nav>
 
     <script type="module">
-        // Firebase 設定與導航邏輯
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        
-        // 初始化 Lucide Icons
-        lucide.createIcons();
+        import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
-        // 簡單路由切換函數
-        window.navigateTo = function(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId).classList.add('active');
-            
-            // 如果在詳細頁，隱藏底部導航，反之顯示
-            const bottomNav = document.getElementById('bottom-nav');
-            if (pageId === 'page-detail') {
-                bottomNav.style.display = 'none';
-            } else {
-                bottomNav.style.display = 'flex';
-            }
-            window.scrollTo(0, 0);
+        // 您的金鑰配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyCOhBN9TH3UJSOSx5XVyQ08f_2RUckvXYU",
+            authDomain: "holyhairsalon-f73bf.firebaseapp.com",
+            databaseURL: "https://holyhairsalon-f73bf-default-rtdb.firebaseio.com",
+            projectId: "holyhairsalon-f73bf",
+            storageBucket: "holyhairsalon-f73bf.firebasestorage.app",
+            messagingSenderId: "960169055224",
+            appId: "1:960169055224:web:2c826e76e3a177fcbf3c0d",
+            measurementId: "G-ZRY4YH5Q63"
         };
 
-        window.confirmBooking = function() {
-            alert("正在連線 Firebase 建立預約...");
-            // 這裡接入之前的 confirmBooking() Firebase 邏輯
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        lucide.createIcons();
+
+        // 頁面路由與導航
+        window.navigateTo = (pageId, shopName = "店家詳情") => {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('bottom-nav').style.display = (pageId === 'page-home') ? 'flex' : 'none';
+            if(pageId === 'page-detail') document.getElementById('current-shop-name').innerText = shopName;
+            window.scrollTo(0,0);
+        };
+
+        // 偵測登入狀態
+        onAuthStateChanged(auth, (user) => {
+            const status = document.getElementById('auth-status');
+            status.innerText = user ? `Hi, ${user.phoneNumber || '會員'}` : "登入/註冊";
+        });
+
+        // 讀取店家列表 (Firestore 串接)
+        async function loadShops() {
+            const listContainer = document.getElementById('shop-list');
+            // 實際開發可改為 getDocs(collection(db, "shops"))
+            const mockShops = [
+                { name: "Holy Hair Salon", cat: "美髮", dist: "0.5km", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400" },
+                { name: "Angel Nail Art", cat: "美甲", dist: "1.2km", img: "https://images.unsplash.com/photo-1604072366595-e75dc92d6bdc?w=400" }
+            ];
+
+            listContainer.innerHTML = mockShops.map(shop => `
+                <div onclick="navigateTo('page-detail', '${shop.name}')" class="bg-white rounded-2xl overflow-hidden shadow-sm border cursor-pointer active:scale-95 transition">
+                    <img src="${shop.img}" class="h-40 w-full object-cover">
+                    <div class="p-4">
+                        <div class="flex justify-between items-center mb-1">
+                            <h3 class="font-bold text-gray-800">${shop.name}</h3>
+                            <span class="text-rose-500 text-xs font-bold">★ 5.0</span>
+                        </div>
+                        <p class="text-xs text-gray-400">${shop.cat} · 距離 ${shop.dist}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        loadShops();
+
+        // 提交預約到 Firestore
+        window.submitBooking = async () => {
+            const date = document.getElementById('booking-date').value;
+            if(!date) return alert("請選擇日期");
+            
+            try {
+                await addDoc(collection(db, "bookings"), {
+                    shopName: document.getElementById('current-shop-name').innerText,
+                    date: date,
+                    status: "pending",
+                    createdAt: new Date()
+                });
+                alert("預約成功！已寫入 Holy Hair Salon 資料庫。");
+                navigateTo('page-home');
+            } catch (e) {
+                console.error("Error: ", e);
+                alert("預約失敗，請檢查 Firebase 設定");
+            }
         };
     </script>
 </body>
