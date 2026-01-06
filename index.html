@@ -69,12 +69,18 @@
     </nav>
 
     <script>
-        const shops = [
-            { id: "001", name: "Holy Hair Salon", cat: "美髮", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=500", srv: "韓系燙髮、結構護理、專業洗剪", pkg: "燙髮套餐 $3280" },
-            { id: "002", name: "靜謐 SPA 會館", cat: "SPA", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500", srv: "精油舒壓、經絡按摩", pkg: "放鬆課程 $1800" },
-            { id: "003", name: "小清新美甲設計", cat: "美甲", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=500", srv: "凝膠美甲、設計彩繪", pkg: "設計款任選 $1200" },
-            { id: "004", name: "醫美微調專家", cat: "醫美", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=500", srv: "皮秒雷射、煥膚保養", pkg: "亮白療程 $4500" },
-            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500", srv: "復古油頭、專業修容", pkg: "理髮修容 $900" }
+       // 10 家豐富的 Demo 店家資料
+        const demoData = [
+            { id: "0001", name: "Holy Hair Salon", cat: "美髮", color: "rose", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600", services: "韓系氣墊燙、專業剪髮", products: "日本資生堂髮品", packages: "燙髮套餐: $3,280" },
+            { id: "0002", name: "靜謐 SPA 會館", cat: "SPA", color: "blue", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600", services: "精油深層放鬆、瑞典按摩", products: "法國歐舒丹精油", packages: "舒壓 90min: $1,800" },
+            { id: "0003", name: "小清新美甲設計", cat: "美甲", color: "purple", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=600", services: "手部凝膠、日系彩繪", products: "日本 Presto 凝膠", packages: "任選彩繪: $1,200" },
+            { id: "0004", name: "醫美微調專家", cat: "醫美", color: "green", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=600", services: "皮秒雷射、美肌保養", products: "專業級術後護理組", packages: "光感煥膚療程: $4,500" },
+            { id: "0005", name: "潮流男士理髮", cat: "美髮", color: "rose", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600", services: "復古油頭、專業修容", products: "美國 Reuzel 髮油", packages: "理髮+修容: $900" },
+            { id: "0006", name: "東方韻味美容", cat: "SPA", color: "blue", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=600", services: "臉部撥筋、漢方經絡", products: "天然草本精萃", packages: "漢方美顏 60min: $1,500" },
+            { id: "0007", name: "氧氣健身工坊", cat: "健身", color: "orange", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600", services: "1對1教練、皮拉提斯", products: "專業重訓器材", packages: "體驗課程 3堂: $2,400" },
+            { id: "0008", name: "奢華睫毛沙龍", cat: "美甲", color: "purple", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=600", services: "3D嫁接、6D爆濃睫毛", products: "SGS認證黑膠", packages: "150根輕羽接睫: $1,300" },
+            { id: "0009", name: "療癒系手作香氛", cat: "SPA", color: "blue", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=600", services: "職人香水課程、調香", products: "英國進口精油", packages: "專屬調香課程: $1,980" },
+            { id: "0100", name: "夢幻婚禮秘書", cat: "美髮", color: "rose", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=600", services: "新娘造型、整體設計", products: "頂級化妝品系列", packages: "單一妝髮設計: $3,600" }
         ];
 
         let selShop = null;
@@ -110,7 +116,7 @@
 
             const newOrder = {
                 id: "BK" + Math.floor(Math.random() * 9000 + 1000),
-                shopId: selShop.id, // 關鍵：存入店家 ID (如 001)
+                shopId: selShop.id, // 關鍵：存入店家 ID (如 0001)
                 shop: selShop.name,
                 service: selShop.srv.split('、')[0],
                 price: price,
@@ -130,3 +136,4 @@
     </script>
 </body>
 </html>
+
