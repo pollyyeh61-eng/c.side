@@ -61,7 +61,7 @@
         </div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t flex justify-around py-3 z-50">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t flex justify-around py-3 z-50 shadow-md">
         <a href="index.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">探索</span></a>
         <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">行程</span></a>
         <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user" class="w-5 h-5"></i><span class="text-[10px] mt-1 font-bold">我的</span></a>
@@ -80,7 +80,6 @@
         let selShop = null;
         const list = document.getElementById('shop-list');
         
-        // 渲染列表
         list.innerHTML = shops.map(s => `
             <div onclick="openDetail('${s.id}')" class="bg-white p-4 rounded-[2rem] flex gap-4 shadow-sm border border-gray-100 active:scale-[0.97] transition-all">
                 <img src="${s.img}" class="w-20 h-20 rounded-2xl object-cover shadow-sm">
@@ -104,29 +103,26 @@
 
         window.closeDetail = () => document.getElementById('detail-overlay').classList.remove('active');
 
-        // --- 核心預約邏輯：串連第二頁與第三頁 ---
+        // --- 核心預約邏輯：將店家 ID 作為未來的 OTP ---
         window.bookNow = () => {
-            // 1. 從 pkg 字串中提取純數字金額
             const priceMatch = selShop.pkg.match(/\d+/);
             const price = priceMatch ? parseInt(priceMatch[0]) : 0;
 
-            // 2. 建立訂單物件
             const newOrder = {
                 id: "BK" + Math.floor(Math.random() * 9000 + 1000),
+                shopId: selShop.id, // 關鍵：存入店家 ID (如 001)
                 shop: selShop.name,
-                service: selShop.srv.split('、')[0], // 抓第一個服務當代表
+                service: selShop.srv.split('、')[0],
                 price: price,
                 date: new Date().toLocaleDateString(), 
                 time: "14:00", 
-                status: "待核銷" // 這個狀態會讓第二頁出現 OTP 核銷按鈕
+                status: "待核銷" 
             };
 
-            // 3. 儲存至本地 (與第二、三頁統一標籤)
             let orders = JSON.parse(localStorage.getItem('my_orders') || '[]');
             orders.unshift(newOrder);
             localStorage.setItem('my_orders', JSON.stringify(orders));
 
-            // 4. 前往行程頁
             window.location.href = "orders.html";
         };
 
