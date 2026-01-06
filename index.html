@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>美業平台入口・你的美感生活</title>
+    <title>探索美感</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; background: #f9fafb; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Noto Sans TC', sans-serif; background: #f9fafb; -webkit-text-size-adjust: 100%; }
         .detail-page { display: none; position: fixed; inset: 0; background: white; z-index: 100; overflow-y: auto; }
         .detail-page.active { display: block; }
-        .nav-active { color: #f43f5e; }
     </style>
 </head>
 <body class="pb-32">
     <header class="bg-white p-6 sticky top-0 z-50 border-b">
-        <h1 class="text-rose-500 font-black text-2xl italic tracking-tighter">美業平台入口</h1>
+        <h1 class="text-rose-500 font-black text-2xl italic tracking-tighter">BEAUTY LIFE</h1>
         <div class="mt-4 relative">
-            <input type="text" placeholder="搜尋精選店家..." class="w-full bg-gray-100 rounded-2xl py-4 px-12 text-base outline-none">
+            <input type="text" placeholder="搜尋 10 家精選..." class="w-full bg-gray-100 rounded-2xl py-4 px-12 text-base outline-none">
             <i data-lucide="search" class="absolute left-4 top-4 text-gray-400"></i>
         </div>
     </header>
@@ -27,84 +26,69 @@
     <div id="detail-overlay" class="detail-page">
         <nav class="p-5 flex items-center border-b sticky top-0 bg-white">
             <button onclick="closeDetail()" class="p-2"><i data-lucide="chevron-left" class="w-8 h-8"></i></button>
-            <span class="ml-2 text-xl font-bold" id="h-title">店家資訊</span>
+            <span class="ml-2 text-xl font-bold">店家資訊</span>
         </nav>
         <div class="p-6 pb-40 space-y-8">
             <div id="d-img" class="w-full h-72 rounded-[3rem] shadow-lg overflow-hidden bg-gray-100"></div>
-            <div>
-                <h2 id="d-name" class="text-3xl font-black text-gray-800"></h2>
-                <div id="d-cat" class="mt-2"></div>
-            </div>
+            <div><h2 id="d-name" class="text-3xl font-black text-gray-800"></h2><div id="d-cat" class="mt-2"></div></div>
             <div class="space-y-6">
-                <div class="bg-gray-50 p-6 rounded-[2rem] shadow-sm">
-                    <h3 class="font-bold text-lg mb-3 border-l-4 border-rose-400 pl-3">服務介紹</h3>
-                    <p id="d-srv" class="text-gray-600 leading-relaxed"></p>
-                </div>
-                <div class="bg-rose-50 p-6 rounded-[2rem] border border-rose-100">
-                    <h3 class="font-bold text-rose-500 text-lg mb-3">獨家套餐</h3>
-                    <p id="d-pkg" class="text-rose-600 font-bold text-lg whitespace-pre-wrap"></p>
-                </div>
+                <div class="bg-gray-50 p-6 rounded-[2rem]"><h3 class="font-bold text-lg mb-2">服務介紹</h3><p id="d-srv" class="text-gray-600 leading-relaxed"></p></div>
+                <div class="bg-rose-50 p-6 rounded-[2rem] border border-rose-100"><h3 class="font-bold text-rose-500 text-lg mb-2">獨家套餐</h3><p id="d-pkg" class="text-rose-600 font-bold text-lg"></p></div>
             </div>
         </div>
-        <div class="fixed bottom-10 left-0 right-0 px-8">
-            <button onclick="bookNow()" class="w-full bg-slate-900 text-white py-5 rounded-full font-bold text-xl shadow-2xl active:scale-95 transition-transform">立即預約服務</button>
-        </div>
+        <div class="fixed bottom-10 left-0 right-0 px-8"><button onclick="bookNow()" class="w-full bg-slate-900 text-white py-5 rounded-full font-bold text-xl shadow-2xl active:scale-95 transition">立即預約服務</button></div>
     </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-4 z-50 shadow-[0_-5px_20px_rgba(0,0,0,0.05)]">
-        <a href="index.html" class="nav-active flex flex-col items-center"><i data-lucide="home"></i><span class="text-xs mt-1 font-bold">探索</span></a>
-        <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-xs mt-1 font-bold">行程</span></a>
-        <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user"></i><span class="text-xs mt-1 font-bold">我的</span></a>
-        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings"></i><span class="text-xs mt-1 font-bold">管理</span></a>
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-4 z-50 shadow-lg">
+        <a href="index.html" class="text-rose-500 flex flex-col items-center"><i data-lucide="home"></i><span class="text-xs font-bold mt-1">探索</span></a>
+        <a href="orders.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="calendar"></i><span class="text-xs font-bold mt-1">行程</span></a>
+        <a href="profile.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="user"></i><span class="text-xs font-bold mt-1">我的</span></a>
+        <a href="admin.html" class="text-gray-300 flex flex-col items-center"><i data-lucide="settings"></i><span class="text-xs font-bold mt-1">管理</span></a>
     </nav>
 
     <script>
         const shops = [
-            { id: "001", name: "Holy Hair Salon", cat: "美髮", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=500", srv: "韓系燙髮、結構護理、專業剪髮", pkg: "人氣燙髮套餐 $3280" },
-            { id: "002", name: "靜謐 SPA 會館", cat: "SPA", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500", srv: "深層精油舒壓、經絡按摩", pkg: "放鬆課程 90min $1800" },
-            { id: "003", name: "小清新美甲設計", cat: "美甲", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=500", srv: "手部凝膠、設計彩繪", pkg: "設計款任選 $1200" },
+            { id: "001", name: "Holy Hair Salon", cat: "美髮", img: "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=500", srv: "韓系燙髮、結構護理", pkg: "燙髮套餐 $3280" },
+            { id: "002", name: "靜謐 SPA 會館", cat: "SPA", img: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=500", srv: "精油舒壓、經絡按摩", pkg: "放鬆課程 $1800" },
+            { id: "003", name: "小清新美甲設計", cat: "美甲", img: "https://images.unsplash.com/photo-1604654894610-df4906821603?w=500", srv: "凝膠美甲、彩繪設計", pkg: "設計款任選 $1200" },
             { id: "004", name: "醫美微調專家", cat: "醫美", img: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?w=500", srv: "皮秒雷射、煥膚保養", pkg: "亮白療程 $4500" },
-            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500", srv: "復古油頭、專業修容", pkg: "理髮修容套餐 $900" },
+            { id: "005", name: "潮流男士理髮", cat: "美髮", img: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500", srv: "復古油頭、專業修容", pkg: "理髮修容 $900" },
             { id: "006", name: "東方韻味美容", cat: "SPA", img: "https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=500", srv: "臉部撥筋、漢方保養", pkg: "漢方美顏 $1500" },
-            { id: "007", name: "氧氣健身工坊", cat: "健身", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500", srv: "私人教練、體態雕塑", pkg: "體驗課程 $2400" },
-            { id: "008", name: "奢華睫毛沙龍", cat: "美甲", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=500", srv: "3D/6D 嫁接睫毛", pkg: "輕羽接睫 $1300" },
-            { id: "009", name: "療癒系手作香氛", cat: "SPA", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=500", srv: "專屬調香、香水課程", pkg: "手作調香 $1980" },
-            { id: "010", name: "夢幻婚禮秘書", cat: "美髮", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=500", srv: "新娘妝髮、造型設計", pkg: "造型設計 $3600" }
+            { id: "007", name: "氧氣健身工坊", cat: "健身", img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500", srv: "1對1私人教練", pkg: "體驗課程 $2400" },
+            { id: "008", name: "奢華睫毛沙龍", cat: "美甲", img: "https://images.unsplash.com/photo-1582213708522-f831828bd542?w=500", srv: "嫁接睫毛、3D設計", pkg: "輕羽接睫 $1300" },
+            { id: "009", name: "療癒系手作香氛", cat: "SPA", img: "https://images.unsplash.com/photo-1602928321679-560bb453f190?w=500", srv: "專屬調香課程", pkg: "手作香氛 $1980" },
+            { id: "010", name: "夢幻婚禮秘書", cat: "美髮", img: "https://images.unsplash.com/photo-1523263685509-57c1d0ef832a?w=500", srv: "新娘造型、婚禮設計", pkg: "造型設計 $3600" }
         ];
 
-        let currentShop = null;
+        let selShop = null;
         const list = document.getElementById('shop-list');
         list.innerHTML = shops.map(s => `
-            <div onclick="openDetail('${s.id}')" class="bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-md border border-gray-100 active:scale-95 transition">
+            <div onclick="openDetail('${s.id}')" class="bg-white p-5 rounded-[2.5rem] flex gap-5 shadow-sm border border-gray-100 active:scale-95 transition">
                 <img src="${s.img}" class="w-28 h-28 rounded-[2rem] object-cover">
-                <div class="flex-1 py-2 flex flex-col justify-center">
+                <div class="flex-1 py-1 flex flex-col justify-center">
                     <h3 class="font-bold text-gray-800 text-xl">${s.name}</h3>
-                    <p class="text-xs text-gray-400 mt-2 line-clamp-1">${s.srv}</p>
-                    <div class="mt-4"><span class="text-[10px] bg-rose-50 text-rose-500 px-4 py-1.5 rounded-full font-black uppercase">${s.cat}</span></div>
+                    <p class="text-xs text-gray-400 mt-2">${s.cat}</p>
                 </div>
             </div>`).join('');
 
         window.openDetail = (id) => {
-            currentShop = shops.find(x => x.id === id);
-            document.getElementById('d-name').innerText = currentShop.name;
-            document.getElementById('d-srv').innerText = currentShop.srv;
-            document.getElementById('d-pkg').innerText = currentShop.pkg;
-            document.getElementById('d-img').innerHTML = `<img src="${currentShop.img}" class="w-full h-full object-cover">`;
-            document.getElementById('d-cat').innerHTML = `<span class="bg-rose-50 text-rose-500 text-sm px-4 py-1 rounded-full font-bold">${currentShop.cat}</span>`;
+            selShop = shops.find(x => x.id === id);
+            document.getElementById('d-name').innerText = selShop.name;
+            document.getElementById('d-srv').innerText = selShop.srv;
+            document.getElementById('d-pkg').innerText = selShop.pkg;
+            document.getElementById('d-img').innerHTML = `<img src="${selShop.img}" class="w-full h-full object-cover">`;
+            document.getElementById('d-cat').innerHTML = `<span class="bg-rose-50 text-rose-500 text-xs px-3 py-1 rounded-full font-bold">${selShop.cat}</span>`;
             document.getElementById('detail-overlay').classList.add('active');
         };
-
         window.closeDetail = () => document.getElementById('detail-overlay').classList.remove('active');
-
         window.bookNow = () => {
             let b = JSON.parse(localStorage.getItem('my_bookings') || '[]');
-            b.unshift({...currentShop, orderId: "BK"+Math.floor(Math.random()*9000+1000)});
+            b.unshift({...selShop, orderId: "BK"+Math.floor(Math.random()*9000+1000)});
             localStorage.setItem('my_bookings', JSON.stringify(b));
-            alert("預約成功！已加入行程。");
+            alert("預約成功！");
             window.location.href = "orders.html";
         };
         lucide.createIcons();
     </script>
 </body>
 </html>
-
