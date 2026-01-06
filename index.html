@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>美業入口平台・你的美感生活</title>
+    <title>美業入口平台</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -12,17 +12,20 @@
         .page { display: none; }
         .page.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        /* 浮動按鍵動畫 */
-        .fab-shadow { shadow-lg shadow-rose-200; }
     </style>
 </head>
-<body class="bg-gray-50 pb-24">
+<body class="bg-gray-50 pb-20">
 
     <div id="page-home" class="page active">
-        <header class="bg-white p-4 sticky top-0 z-50">
-            <h1 class="text-rose-500 font-bold text-sm mb-3">美業入口平台</h1>
+        <header class="bg-white p-4 sticky top-0 z-50 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+                <div class="text-rose-500 font-bold text-sm flex items-center">
+                    <i data-lucide="sparkles" class="w-4 h-4 mr-1"></i> 附近美業推薦
+                </div>
+                <span class="text-[10px] text-gray-300">美業入口平台</span>
+            </div>
             <div class="relative">
-                <input type="text" placeholder="搜尋服務項目..." class="w-full bg-gray-100 rounded-full py-2 px-10 text-sm outline-none">
+                <input type="text" placeholder="搜尋：美髮、美甲、SPA..." class="w-full bg-gray-100 rounded-full py-2 px-10 text-sm focus:outline-none">
                 <i data-lucide="search" class="absolute left-3 top-2.5 w-4 h-4 text-gray-400"></i>
             </div>
         </header>
@@ -30,176 +33,178 @@
     </div>
 
     <div id="page-shop-detail" class="page bg-white min-h-screen">
-        <nav class="p-4 flex items-center border-b sticky top-0 bg-white z-40">
+        <nav class="p-4 flex items-center border-b sticky top-0 bg-white z-50">
             <button onclick="navigateTo('page-home')"><i data-lucide="arrow-left" class="w-6 h-6"></i></button>
-            <span id="detail-nav-name" class="ml-4 font-bold text-gray-800">載入中...</span>
+            <span class="ml-4 font-bold text-lg">店家空間與服務</span>
         </nav>
-        
-        <div class="p-5 space-y-6 pb-20">
-            <div id="detail-images" class="flex gap-2 overflow-x-auto no-scrollbar">
-                </div>
+        <div class="p-5 space-y-6 pb-40">
+            <div id="detail-photos" class="flex gap-2 overflow-x-auto no-scrollbar"></div>
             
-            <h2 id="detail-name" class="text-2xl font-black text-gray-800"></h2>
-            
-            <div class="space-y-6">
-                <section>
-                    <h3 class="font-bold text-gray-800 border-l-4 border-rose-400 pl-2 mb-2">服務介紹</h3>
-                    <p id="detail-services" class="text-sm text-gray-500 leading-relaxed whitespace-pre-wrap"></p>
-                </section>
-                <section>
-                    <h3 class="font-bold text-gray-800 border-l-4 border-rose-400 pl-2 mb-2">產品介紹</h3>
-                    <p id="detail-products" class="text-sm text-gray-500 leading-relaxed whitespace-pre-wrap"></p>
-                </section>
-                <section class="bg-rose-50 p-4 rounded-2xl">
-                    <h3 class="font-bold text-rose-600 mb-2">特惠套餐組合</h3>
-                    <p id="detail-packages" class="text-sm text-rose-400 leading-relaxed whitespace-pre-wrap"></p>
-                </section>
+            <div class="space-y-2">
+                <h2 id="detail-name" class="text-2xl font-black text-gray-800"></h2>
+                <div class="flex gap-2"><span class="bg-rose-50 text-rose-500 text-[10px] px-2 py-1 rounded-md font-bold">官方認證</span></div>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-3xl">
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i data-lucide="list-checks" class="w-4 h-4 mr-2 text-rose-400"></i> 服務介紹</h3>
+                <p id="detail-services" class="text-sm text-gray-600 whitespace-pre-line"></p>
+            </div>
+
+            <div class="bg-gray-50 p-5 rounded-3xl">
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center"><i data-lucide="package" class="w-4 h-4 mr-2 text-rose-400"></i> 產品介紹</h3>
+                <p id="detail-products" class="text-sm text-gray-500 leading-relaxed whitespace-pre-line"></p>
+            </div>
+
+            <div class="bg-rose-50 p-5 rounded-3xl border border-rose-100">
+                <h3 class="font-bold text-rose-500 mb-3 flex items-center"><i data-lucide="gift" class="w-4 h-4 mr-2"></i> 套餐組合</h3>
+                <p id="detail-packages" class="text-sm text-rose-600 leading-relaxed whitespace-pre-line"></p>
             </div>
         </div>
-
+        
         <div class="fixed bottom-24 left-0 right-0 px-6 z-50">
-            <a id="booking-btn" href="#" target="_blank" class="w-full bg-rose-500 text-white py-4 rounded-full font-bold text-center block shadow-xl shadow-rose-200 border-2 border-white transform active:scale-95 transition">
-                立即預約服務
-            </a>
+            <a id="booking-link" href="#" target="_blank" class="block w-full bg-rose-500 text-white py-4 rounded-full font-bold text-center shadow-xl shadow-rose-200 border-2 border-white transform active:scale-95 transition-all">立即前往預約</a>
         </div>
     </div>
 
-    <div id="page-admin" class="page bg-slate-50 min-h-screen">
-        <header class="bg-white p-6 border-b flex justify-between items-center">
-            <div><h2 class="font-black text-xl text-slate-800">店家門面管理</h2><p id="admin-shop-id" class="text-[10px] text-gray-400"></p></div>
-            <button onclick="location.reload()" class="text-xs bg-slate-100 px-3 py-1 rounded-full">登出</button>
+    <div id="page-admin-center" class="page bg-slate-50 min-h-screen">
+        <header class="p-6 bg-white border-b flex justify-between items-center">
+            <div>
+                <h2 class="font-black text-2xl text-slate-800">店家管理</h2>
+                <p id="admin-status" class="text-xs text-gray-400">請登入以編輯門面</p>
+            </div>
+            <button onclick="location.reload()" class="text-xs text-rose-500 font-bold">登出</button>
         </header>
 
-        <div id="admin-login" class="p-10">
-            <input type="password" id="login-code" placeholder="請輸入店家代碼" class="w-full p-4 rounded-2xl border text-center text-xl mb-4">
-            <button onclick="authAdmin()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold">進入管理</button>
+        <div id="admin-login-box" class="p-6">
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100">
+                <input type="password" id="admin-code" placeholder="輸入代碼" class="w-full text-center text-2xl border-b-2 py-2 outline-none focus:border-rose-400 transition">
+                <button onclick="handleAdminLogin()" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold mt-8">進入後台</button>
+            </div>
         </div>
 
-        <div id="admin-editor" class="hidden p-4 space-y-6 pb-32">
-            <div class="bg-white p-5 rounded-3xl shadow-sm space-y-3">
-                <h3 class="font-bold text-sm text-gray-400 uppercase">門面照片 (5張URL)</h3>
-                <input type="text" class="img-input w-full p-2 bg-gray-50 rounded-lg text-xs" placeholder="照片 1 URL">
-                <input type="text" class="img-input w-full p-2 bg-gray-50 rounded-lg text-xs" placeholder="照片 2 URL">
-                <input type="text" class="img-input w-full p-2 bg-gray-50 rounded-lg text-xs" placeholder="照片 3 URL">
-                <input type="text" class="img-input w-full p-2 bg-gray-50 rounded-lg text-xs" placeholder="照片 4 URL">
-                <input type="text" class="img-input w-full p-2 bg-gray-50 rounded-lg text-xs" placeholder="照片 5 URL">
+        <div id="admin-editor" class="p-4 hidden space-y-6 pb-32">
+            <div class="bg-white p-5 rounded-3xl shadow-sm space-y-4">
+                <h3 class="font-bold text-sm text-gray-400">門面照片 (5張 URL)</h3>
+                <div id="photo-inputs" class="space-y-2">
+                    <input type="text" class="photo-url w-full p-2 bg-gray-50 rounded-lg text-xs border" placeholder="照片 1 (主圖)">
+                    <input type="text" class="photo-url w-full p-2 bg-gray-50 rounded-lg text-xs border" placeholder="照片 2">
+                    <input type="text" class="photo-url w-full p-2 bg-gray-50 rounded-lg text-xs border" placeholder="照片 3">
+                    <input type="text" class="photo-url w-full p-2 bg-gray-50 rounded-lg text-xs border" placeholder="照片 4">
+                    <input type="text" class="photo-url w-full p-2 bg-gray-50 rounded-lg text-xs border" placeholder="照片 5">
+                </div>
             </div>
 
             <div class="bg-white p-5 rounded-3xl shadow-sm space-y-4">
-                <div><label class="text-xs font-bold text-gray-400">服務介紹</label><textarea id="edit-services" class="w-full p-3 bg-gray-50 rounded-xl mt-1 text-sm h-24"></textarea></div>
-                <div><label class="text-xs font-bold text-gray-400">產品介紹</label><textarea id="edit-products" class="w-full p-3 bg-gray-50 rounded-xl mt-1 text-sm h-24"></textarea></div>
-                <div><label class="text-xs font-bold text-gray-400">套餐組合</label><textarea id="edit-packages" class="w-full p-3 bg-gray-50 rounded-xl mt-1 text-sm h-24 text-rose-500"></textarea></div>
+                <h3 class="font-bold text-sm text-gray-400">內容編輯</h3>
+                <textarea id="edit-services" placeholder="服務介紹" class="w-full h-24 p-3 bg-gray-50 rounded-xl text-sm border"></textarea>
+                <textarea id="edit-products" placeholder="產品介紹" class="w-full h-24 p-3 bg-gray-50 rounded-xl text-sm border"></textarea>
+                <textarea id="edit-packages" placeholder="套餐組合" class="w-full h-24 p-3 bg-gray-50 rounded-xl text-sm border text-rose-500 font-medium"></textarea>
             </div>
 
-            <button onclick="saveToFirebase()" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-emerald-100 flex items-center justify-center">
-                <i data-lucide="save" class="w-5 h-5 mr-2"></i> 儲存並更新門面
+            <button onclick="updateShopData()" class="w-full bg-emerald-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-emerald-100 flex items-center justify-center">
+                <i data-lucide="save" class="w-5 h-5 mr-2"></i> 儲存並即時更新
             </button>
         </div>
     </div>
 
     <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-50">
-        <button onclick="navigateTo('page-home')" class="nav-item text-rose-500" data-target="page-home"><i data-lucide="home"></i><span class="text-[10px] block">探索</span></button>
-        <button onclick="navigateTo('page-orders')" class="nav-item text-gray-400" data-target="page-orders"><i data-lucide="calendar"></i><span class="text-[10px] block">行程</span></button>
-        <button onclick="navigateTo('page-profile')" class="nav-item text-gray-400" data-target="page-profile"><i data-lucide="user"></i><span class="text-[10px] block">我的</span></button>
-        <button onclick="navigateTo('page-admin')" class="nav-item text-gray-400" data-target="page-admin"><i data-lucide="settings"></i><span class="text-[10px] block">管理</span></button>
+        <button onclick="navigateTo('page-home')" class="nav-item text-rose-500" data-target="page-home"><i data-lucide="home"></i><span class="text-[10px] block font-bold">探索</span></button>
+        <button onclick="navigateTo('page-orders')" class="nav-item text-gray-400" data-target="page-orders"><i data-lucide="calendar"></i><span class="text-[10px] block font-bold">行程</span></button>
+        <button onclick="navigateTo('page-profile')" class="nav-item text-gray-400" data-target="page-profile"><i data-lucide="user"></i><span class="text-[10px] block font-bold">我的</span></button>
+        <button onclick="navigateTo('page-admin-center')" class="nav-item text-gray-400" data-target="page-admin-center"><i data-lucide="settings"></i><span class="text-[10px] block font-bold">管理</span></button>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-        const firebaseConfig = { projectId: "holyhairsalon-f73bf" }; // 簡化展示
+        const firebaseConfig = { projectId: "holyhairsalon-f73bf" };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         lucide.createIcons();
 
-        let currentAdminId = '';
+        let currentShopId = '';
 
-        // 頁面跳轉
         window.navigateTo = (id) => {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.getElementById('bottom-nav').style.display = (id === 'page-shop-detail') ? 'none' : 'flex';
             window.scrollTo(0,0);
         };
 
-        // 即時監聽所有店家資料 (更新立刻反應)
+        // 即時渲染首頁清單
         onSnapshot(collection(db, "shops"), (snapshot) => {
-            const shopContainer = document.getElementById('shop-list-container');
-            shopContainer.innerHTML = '';
+            const container = document.getElementById('shop-list-container');
+            container.innerHTML = '';
             snapshot.forEach((doc) => {
-                const data = doc.data();
-                const id = doc.id;
-                shopContainer.innerHTML += `
-                    <div onclick="showDetail('${id}')" class="bg-white p-3 rounded-[2rem] flex gap-4 shadow-sm border border-gray-50">
-                        <img src="${data.images[0]}" class="w-24 h-24 rounded-2xl object-cover bg-gray-100">
-                        <div class="flex-1 py-1">
-                            <h3 class="font-bold text-gray-800">${data.name}</h3>
-                            <p class="text-[10px] text-gray-400 mt-1 truncate w-40">${data.services}</p>
-                            <span class="inline-block mt-2 text-[10px] bg-rose-50 text-rose-500 px-2 py-0.5 rounded-full font-bold">可預約</span>
+                const shop = doc.data();
+                container.innerHTML += `
+                    <div onclick="openShopDetail('${doc.id}')" class="bg-white p-3 rounded-[2rem] flex gap-4 shadow-sm border border-gray-50 active:scale-95 transition">
+                        <img src="${shop.photos[0] || ''}" class="w-24 h-24 rounded-2xl object-cover bg-gray-100">
+                        <div class="flex-1 flex flex-col justify-center">
+                            <h3 class="font-bold text-gray-800">${shop.name}</h3>
+                            <p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${shop.services || '暫無介紹'}</p>
+                            <div class="mt-2"><span class="text-[9px] bg-rose-50 text-rose-500 px-2 py-0.5 rounded-full font-bold">可預約</span></div>
                         </div>
                     </div>
                 `;
             });
-            lucide.createIcons();
         });
 
-        // 顯示詳情頁
-        window.showDetail = (id) => {
-            onSnapshot(doc(db, "shops", id), (docSnap) => {
-                const data = docSnap.data();
-                document.getElementById('detail-nav-name').innerText = data.name;
+        // 開啟詳情頁
+        window.openShopDetail = (id) => {
+            onSnapshot(doc(db, "shops", id), (snap) => {
+                const data = snap.data();
                 document.getElementById('detail-name').innerText = data.name;
                 document.getElementById('detail-services').innerText = data.services;
                 document.getElementById('detail-products').innerText = data.products;
                 document.getElementById('detail-packages').innerText = data.packages;
-                document.getElementById('booking-btn').href = data.bookingUrl;
+                document.getElementById('booking-link').href = data.url || '#';
                 
-                const imgContainer = document.getElementById('detail-images');
-                imgContainer.innerHTML = data.images.map(url => url ? `<img src="${url}" class="w-72 h-48 rounded-3xl object-cover bg-gray-50 flex-shrink-0">` : '').join('');
+                const photoBox = document.getElementById('detail-photos');
+                photoBox.innerHTML = data.photos.filter(url => url).map(url => `
+                    <img src="${url}" class="w-72 h-48 rounded-[2rem] object-cover flex-shrink-0 shadow-sm border">
+                `).join('');
                 
                 navigateTo('page-shop-detail');
             });
         };
 
-        // 店家登入驗證
-        window.authAdmin = () => {
-            const code = document.getElementById('login-code').value;
-            if (['001', '002', '003'].includes(code)) {
-                currentAdminId = code;
-                document.getElementById('admin-shop-id').innerText = "Shop ID: " + code;
-                document.getElementById('admin-login').classList.add('hidden');
+        // 管理登入
+        window.handleAdminLogin = () => {
+            const code = document.getElementById('admin-code').value;
+            if (['001', '002', '003', '0000'].includes(code)) {
+                currentShopId = (code === '0000') ? '001' : code;
+                document.getElementById('admin-login-box').classList.add('hidden');
                 document.getElementById('admin-editor').classList.remove('hidden');
+                document.getElementById('admin-status').innerText = `正在編輯店家：${currentShopId}`;
                 
-                // 載入舊資料到編輯器
-                onSnapshot(doc(db, "shops", code), (docSnap) => {
-                    const data = docSnap.data();
+                // 預填現有資料
+                onSnapshot(doc(db, "shops", currentShopId), (snap) => {
+                    const data = snap.data();
                     if(!data) return;
-                    const inputs = document.querySelectorAll('.img-input');
-                    data.images.forEach((url, i) => inputs[i].value = url);
+                    const inputs = document.querySelectorAll('.photo-url');
+                    data.photos.forEach((url, i) => inputs[i].value = url);
                     document.getElementById('edit-services').value = data.services;
                     document.getElementById('edit-products').value = data.products;
                     document.getElementById('edit-packages').value = data.packages;
                 });
-            } else { alert("代碼無效"); }
+            } else { alert("代碼錯誤"); }
         };
 
-        // 儲存至 Firebase (更新鍵)
-        window.saveToFirebase = async () => {
-            const inputs = document.querySelectorAll('.img-input');
-            const updatedData = {
-                images: Array.from(inputs).map(i => i.value),
+        // 儲存更新鍵
+        window.updateShopData = async () => {
+            const photos = Array.from(document.querySelectorAll('.photo-url')).map(i => i.value);
+            const data = {
+                photos: photos,
                 services: document.getElementById('edit-services').value,
                 products: document.getElementById('edit-products').value,
                 packages: document.getElementById('edit-packages').value,
-                name: currentAdminId === '001' ? "Holy Hair Salon" : "店家" + currentAdminId,
-                bookingUrl: "#"
+                name: currentShopId === '001' ? "Holy Hair Salon" : `店家 ${currentShopId}`,
+                url: "https://example.com"
             };
-            
-            await setDoc(doc(db, "shops", currentAdminId), updatedData, { merge: true });
-            alert("門面已即時更新！");
+            await setDoc(doc(db, "shops", currentShopId), data, { merge: true });
+            alert("更新成功！首頁內容已同步變動。");
         };
     </script>
 </body>
 </html>
-
