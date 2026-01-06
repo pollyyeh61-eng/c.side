@@ -12,7 +12,7 @@
         .page { display: none; }
         .page.active { display: block; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .fab-btn { transition: all 0.3s ease; shadow-lg: 0 10px 15px -3px rgba(244, 63, 94, 0.3); }
+        .fab-btn { box-shadow: 0 15px 30px -5px rgba(244, 63, 94, 0.4); transition: all 0.3s ease; }
     </style>
 </head>
 <body class="bg-gray-50 pb-24">
@@ -20,119 +20,103 @@
     <div id="page-home" class="page active">
         <header class="bg-white p-6 sticky top-0 z-50">
             <div class="flex justify-between items-center mb-4">
-                <h1 class="text-rose-500 font-black text-xl tracking-tighter italic">BEAUTY LIFE</h1>
-                <div class="flex items-center text-gray-400 text-[10px] font-bold bg-gray-100 px-3 py-1 rounded-full">
-                    <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> 台北市中心
-                </div>
+                <h1 class="text-rose-500 font-black text-xl italic">BEAUTY LIFE</h1>
+                <div class="bg-gray-100 px-3 py-1 rounded-full text-[10px] text-gray-400 font-bold">台北地區</div>
             </div>
             <div class="relative">
-                <input type="text" placeholder="尋找美感服務..." class="w-full bg-gray-100 rounded-2xl py-3 px-12 text-sm outline-none focus:ring-2 focus:ring-rose-200">
+                <input type="text" placeholder="搜尋美感服務..." class="w-full bg-gray-100 rounded-2xl py-3 px-12 text-sm outline-none">
                 <i data-lucide="search" class="absolute left-4 top-3.5 w-4 h-4 text-gray-400"></i>
             </div>
         </header>
 
-        <section class="p-4 flex justify-between bg-white overflow-x-auto no-scrollbar gap-4">
+        <section class="p-4 flex justify-between bg-white border-b overflow-x-auto no-scrollbar gap-4">
             <div class="flex flex-col items-center min-w-[65px]"><div class="w-14 h-14 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 mb-2 shadow-sm"><i data-lucide="scissors"></i></div><span class="text-xs font-bold text-gray-600">美髮</span></div>
             <div class="flex flex-col items-center min-w-[65px]"><div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-500 mb-2 shadow-sm"><i data-lucide="sparkles"></i></div><span class="text-xs font-bold text-gray-600">美甲</span></div>
             <div class="flex flex-col items-center min-w-[65px]"><div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-2 shadow-sm"><i data-lucide="waves"></i></div><span class="text-xs font-bold text-gray-600">SPA</span></div>
             <div class="flex flex-col items-center min-w-[65px]"><div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-green-500 mb-2 shadow-sm"><i data-lucide="heart-pulse"></i></div><span class="text-xs font-bold text-gray-600">醫美</span></div>
         </section>
 
-        <main class="p-6 space-y-6" id="shop-list-container"></main>
+        <main class="p-6 space-y-6" id="shop-list-container">
+            </main>
     </div>
 
     <div id="page-shop-detail" class="page bg-white min-h-screen">
-        <nav class="p-4 flex items-center sticky top-0 bg-white z-50 border-b">
-            <button onclick="navigateTo('page-home')"><i data-lucide="chevron-left" class="w-6 h-6 text-gray-800"></i></button>
-            <span id="detail-nav-title" class="ml-4 font-bold text-gray-800">服務詳情</span>
+        <nav class="p-4 flex items-center border-b sticky top-0 bg-white z-50">
+            <button onclick="navigateTo('page-home')"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+            <span class="ml-4 font-bold text-lg">店家詳情</span>
         </nav>
         <div class="p-6 space-y-8 pb-40">
-            <div id="detail-images" class="flex gap-4 overflow-x-auto no-scrollbar py-2"></div>
-            <div class="space-y-2">
+            <div id="detail-images" class="flex gap-4 overflow-x-auto no-scrollbar"></div>
+            <div>
                 <h2 id="detail-name" class="text-3xl font-black text-gray-800"></h2>
-                <div class="flex gap-2"><span class="bg-rose-50 text-rose-500 text-xs px-3 py-1 rounded-full font-bold">精選店家</span></div>
+                <span class="bg-rose-50 text-rose-500 text-[10px] px-2 py-1 rounded-md font-bold mt-2 inline-block">官方認證精選</span>
             </div>
             <div class="space-y-6">
                 <section>
-                    <h3 class="font-bold text-gray-800 border-l-4 border-rose-400 pl-3 mb-3">服務介紹</h3>
+                    <h3 class="font-bold text-gray-800 border-l-4 border-rose-400 pl-3 mb-2">服務介紹</h3>
                     <p id="detail-services" class="text-sm text-gray-500 leading-relaxed whitespace-pre-wrap"></p>
                 </section>
                 <section>
-                    <h3 class="font-bold text-gray-800 border-l-4 border-rose-400 pl-3 mb-3">使用產品</h3>
+                    <h3 class="font-bold text-gray-800 border-l-4 border-rose-400 pl-3 mb-2">產品介紹</h3>
                     <p id="detail-products" class="text-sm text-gray-500 leading-relaxed whitespace-pre-wrap"></p>
                 </section>
                 <section class="bg-rose-50 p-6 rounded-[2.5rem]">
-                    <h3 class="font-bold text-rose-500 mb-3 flex items-center"><i data-lucide="gift" class="w-4 h-4 mr-2"></i> 推薦組合</h3>
-                    <p id="detail-packages" class="text-sm text-rose-600 font-medium whitespace-pre-wrap"></p>
+                    <h3 class="font-bold text-rose-500 mb-2 flex items-center"><i data-lucide="gift" class="w-4 h-4 mr-2"></i> 套餐組合</h3>
+                    <p id="detail-packages" class="text-sm text-rose-400 leading-relaxed whitespace-pre-wrap"></p>
                 </section>
             </div>
         </div>
         <div class="fixed bottom-24 left-0 right-0 px-8 z-50">
-            <a id="booking-btn" href="#" target="_blank" class="fab-btn block w-full bg-slate-900 text-white py-4 rounded-full font-bold text-center shadow-2xl border-2 border-slate-800 active:scale-95 transition">立即預約服務</a>
+            <a id="booking-btn" href="#" target="_blank" class="fab-btn block w-full bg-slate-900 text-white py-4 rounded-full font-bold text-center border-2 border-slate-800 active:scale-95 transition">立即前往預約</a>
         </div>
     </div>
 
     <div id="page-orders" class="page">
-        <header class="p-6 bg-white border-b font-black text-xl text-gray-800">我的預約行程</header>
+        <header class="p-6 bg-white border-b font-black text-xl">我的行程</header>
         <div class="p-6 space-y-4">
             <div class="bg-white p-5 rounded-[2rem] shadow-sm border border-gray-100 flex gap-4 items-center">
-                <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 font-bold text-xs flex-col">
+                <div class="w-12 h-12 bg-rose-50 rounded-2xl flex flex-col items-center justify-center text-rose-500 font-bold text-xs">
                     <span>JAN</span><span>06</span>
                 </div>
                 <div class="flex-1">
                     <h4 class="font-bold text-gray-800">Holy Hair Salon</h4>
                     <p class="text-[10px] text-gray-400">韓系氣墊燙 · 14:30</p>
                 </div>
-                <span class="text-[10px] bg-emerald-50 text-emerald-500 px-3 py-1 rounded-full font-bold">已確認</span>
+                <span class="text-[10px] bg-emerald-50 text-emerald-500 px-3 py-1 rounded-full font-bold">已預約</span>
             </div>
-            <p class="text-center text-gray-300 text-xs py-10 tracking-widest">— 僅顯示近期行程 —</p>
         </div>
     </div>
 
     <div id="page-profile" class="page">
-        <div class="bg-rose-500 p-10 pt-16 text-white rounded-b-[3rem] shadow-lg relative overflow-hidden">
-            <div class="relative z-10 flex items-center gap-4">
-                <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-rose-500 shadow-xl"><i data-lucide="user" class="w-8 h-8"></i></div>
-                <div>
-                    <h2 class="font-black text-xl">美感生活家</h2>
-                    <p class="text-xs opacity-70">黃金會員 (Gold Member)</p>
-                </div>
+        <div class="bg-rose-500 p-10 pt-16 text-white rounded-b-[3rem] shadow-lg">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-rose-500"><i data-lucide="user" class="w-8 h-8"></i></div>
+                <div><h2 class="font-black text-xl">美感生活家</h2><p class="text-xs opacity-70">黃金會員</p></div>
             </div>
-            <div class="mt-8 grid grid-cols-2 gap-4 relative z-10">
-                <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
-                    <p class="text-[10px] opacity-80 mb-1">錢包餘額</p>
-                    <p class="text-2xl font-black">$ 1,250</p>
-                </div>
-                <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md">
-                    <p class="text-[10px] opacity-80 mb-1">擁有紅利</p>
-                    <p class="text-2xl font-black">480 pt</p>
-                </div>
+            <div class="mt-8 grid grid-cols-2 gap-4">
+                <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md"><p class="text-[10px] opacity-80 mb-1">餘額</p><p class="text-2xl font-black">$ 1,250</p></div>
+                <div class="bg-white/20 p-4 rounded-2xl backdrop-blur-md"><p class="text-[10px] opacity-80 mb-1">點數</p><p class="text-2xl font-black">480</p></div>
             </div>
         </div>
         <div class="p-6 space-y-3">
             <div class="bg-white p-5 rounded-3xl flex justify-between items-center shadow-sm">
-                <div class="flex items-center gap-3"><i data-lucide="credit-card" class="text-gray-400 w-5 h-5"></i><span class="font-bold text-gray-700">儲值紀錄</span></div>
+                <div class="flex items-center gap-3"><i data-lucide="heart" class="text-gray-400"></i><span class="font-bold">收藏店家</span></div>
                 <i data-lucide="chevron-right" class="text-gray-300"></i>
             </div>
-            <div class="bg-white p-5 rounded-3xl flex justify-between items-center shadow-sm">
-                <div class="flex items-center gap-3"><i data-lucide="heart" class="text-gray-400 w-5 h-5"></i><span class="font-bold text-gray-700">收藏店家</span></div>
-                <i data-lucide="chevron-right" class="text-gray-300"></i>
-            </div>
-            <button class="w-full mt-4 bg-gray-100 text-gray-400 py-4 rounded-3xl font-bold text-sm">編輯個人資料</button>
         </div>
     </div>
 
     <div id="page-admin" class="page bg-slate-50 min-h-screen">
-        <header class="p-6 bg-white border-b font-black text-xl">商家管理後台</header>
+        <header class="p-6 bg-white border-b font-black text-xl">店家管理後台</header>
         <div id="admin-login" class="p-10 text-center">
-            <input type="password" id="admin-code" placeholder="輸入商家代碼" class="w-full p-4 rounded-3xl bg-white border-none shadow-inner text-center text-2xl mb-6">
+            <input type="password" id="admin-code" placeholder="輸入 001 進入編輯" class="w-full p-4 rounded-3xl bg-white text-center text-2xl mb-6 shadow-inner border-none outline-none">
             <button onclick="authAdmin()" class="w-full bg-slate-800 text-white py-4 rounded-3xl font-bold">進入編輯模式</button>
         </div>
         <div id="admin-editor" class="hidden p-4 space-y-6 pb-40">
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4">
                 <h3 class="font-bold text-xs text-gray-400">照片網址 (五張)</h3>
-                <div id="admin-photo-inputs" class="space-y-2">
-                    <input type="text" class="url-in w-full p-2 bg-gray-50 border rounded-xl text-xs" placeholder="照片 1 (主圖)">
+                <div class="space-y-2">
+                    <input type="text" class="url-in w-full p-2 bg-gray-50 border rounded-xl text-xs" placeholder="照片 1">
                     <input type="text" class="url-in w-full p-2 bg-gray-50 border rounded-xl text-xs" placeholder="照片 2">
                     <input type="text" class="url-in w-full p-2 bg-gray-50 border rounded-xl text-xs" placeholder="照片 3">
                     <input type="text" class="url-in w-full p-2 bg-gray-50 border rounded-xl text-xs" placeholder="照片 4">
@@ -140,25 +124,45 @@
                 </div>
             </div>
             <div class="bg-white p-6 rounded-[2.5rem] shadow-sm space-y-4">
-                <h3 class="font-bold text-xs text-gray-400">門面內容詳情</h3>
+                <h3 class="font-bold text-xs text-gray-400">內容編輯</h3>
                 <textarea id="in-services" placeholder="服務介紹" class="w-full h-24 p-4 bg-gray-50 rounded-2xl text-sm"></textarea>
                 <textarea id="in-products" placeholder="產品介紹" class="w-full h-24 p-4 bg-gray-50 rounded-2xl text-sm"></textarea>
                 <textarea id="in-packages" placeholder="套餐組合" class="w-full h-24 p-4 bg-rose-50 text-rose-500 rounded-2xl text-sm"></textarea>
             </div>
-            <button onclick="saveAdminData()" class="w-full bg-emerald-500 text-white py-4 rounded-full font-bold shadow-xl">儲存並即時更新</button>
+            <button onclick="saveAdminData()" class="w-full bg-emerald-500 text-white py-4 rounded-full font-bold shadow-xl">儲存並同步更新</button>
         </div>
     </div>
 
-    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-md border-t flex justify-around py-3 z-[60]">
-        <button onclick="navigateTo('page-home')" class="nav-btn text-rose-500 flex flex-col items-center" data-target="page-home"><i data-lucide="home"></i><span class="text-[10px] font-bold mt-1">探索</span></button>
-        <button onclick="navigateTo('page-orders')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-orders"><i data-lucide="calendar"></i><span class="text-[10px] font-bold mt-1">行程</span></button>
-        <button onclick="navigateTo('page-profile')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-profile"><i data-lucide="user"></i><span class="text-[10px] font-bold mt-1">我的</span></button>
-        <button onclick="navigateTo('page-admin')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-admin"><i data-lucide="settings"></i><span class="text-[10px] font-bold mt-1">管理</span></button>
+    <nav id="bottom-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around py-3 z-[60]">
+        <button onclick="navigateTo('page-home')" class="nav-btn text-rose-500 flex flex-col items-center" data-target="page-home"><i data-lucide="home"></i><span class="text-[10px] font-bold">探索</span></button>
+        <button onclick="navigateTo('page-orders')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-orders"><i data-lucide="calendar"></i><span class="text-[10px] font-bold">行程</span></button>
+        <button onclick="navigateTo('page-profile')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-profile"><i data-lucide="user"></i><span class="text-[10px] font-bold">我的</span></button>
+        <button onclick="navigateTo('page-admin')" class="nav-btn text-gray-300 flex flex-col items-center" data-target="page-admin"><i data-lucide="settings"></i><span class="text-[10px] font-bold">管理</span></button>
     </nav>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
+        // 初版 Demo 資料 (作為預設值)
+        const demoShops = {
+            "001": {
+                name: "Holy Hair Salon",
+                photos: ["https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600", "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600"],
+                services: "韓系氣墊燙、專業洗剪、深層護髮。\n我們專注於打造最適合您臉型的韓式風格。",
+                products: "全店使用日本資生堂 Shiseido 專業髮品，保證不傷髮質。",
+                packages: "【新客首預】韓系燙髮 + 結構護理：$3,280\n【人氣熱銷】專業剪髮 + 頭皮舒壓：$1,200",
+                url: "https://example.com/booking-001"
+            },
+            "002": {
+                name: "靜謐 SPA 會館",
+                photos: ["https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600", "https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?w=600"],
+                services: "全身芳療精油按摩、瑞典式放鬆、深層組織修復。\n在都市叢林中為您提供一處放鬆身心的綠洲。",
+                products: "採用法國歐舒丹 (L'Occitane) 頂級天然植物精油。",
+                packages: "【深度放鬆】精油SPA 90分鐘：$1,800\n【極致雙享】岩盤浴 + 背部按摩：$2,200",
+                url: "https://example.com/booking-002"
+            }
+        };
 
         const firebaseConfig = { projectId: "holyhairsalon-f73bf" };
         const app = initializeApp(firebaseConfig);
@@ -178,58 +182,62 @@
             window.scrollTo(0,0);
         };
 
-        // 即時渲染首頁 (DAMO 店家)
+        // 渲染首頁 (優先從 DB 抓，沒有則顯示 Demo)
         onSnapshot(collection(db, "shops"), (snap) => {
             const list = document.getElementById('shop-list-container');
             list.innerHTML = '';
-            snap.forEach((d) => {
-                const s = d.data();
-                list.innerHTML += `
-                    <div onclick="openShopDetail('${d.id}')" class="bg-white p-4 rounded-[2.5rem] flex gap-5 shadow-sm border border-gray-50 active:scale-95 transition">
-                        <img src="${s.photos[0] || ''}" class="w-24 h-24 rounded-[1.8rem] object-cover bg-gray-100">
-                        <div class="flex-1 py-1 flex flex-col justify-center">
-                            <h3 class="font-bold text-gray-800 text-lg">${s.name}</h3>
-                            <p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${s.services}</p>
-                            <div class="mt-3"><span class="text-[9px] bg-rose-50 text-rose-500 px-3 py-1 rounded-full font-black uppercase tracking-wider">Top Choice</span></div>
-                        </div>
-                    </div>
-                `;
-            });
+            
+            // 如果 DB 沒資料，顯示 Demo 資料
+            if(snap.empty) {
+                Object.entries(demoShops).forEach(([id, s]) => {
+                    renderShopCard(list, id, s);
+                });
+            } else {
+                snap.forEach((d) => renderShopCard(list, d.id, d.data()));
+            }
+            lucide.createIcons();
         });
 
-        // 打開詳情
-        window.openShopDetail = (id) => {
+        function renderShopCard(container, id, s) {
+            container.innerHTML += `
+                <div onclick="openDetail('${id}')" class="bg-white p-4 rounded-[2.5rem] flex gap-5 shadow-sm border border-gray-50 active:scale-95 transition">
+                    <img src="${s.photos[0]}" class="w-24 h-24 rounded-[1.8rem] object-cover bg-gray-100">
+                    <div class="flex-1 py-1 flex flex-col justify-center">
+                        <h3 class="font-bold text-gray-800 text-lg">${s.name}</h3>
+                        <p class="text-[10px] text-gray-400 mt-1 line-clamp-1">${s.services}</p>
+                        <div class="mt-3"><span class="text-[9px] bg-rose-50 text-rose-500 px-3 py-1 rounded-full font-black uppercase">Top Selection</span></div>
+                    </div>
+                </div>`;
+        }
+
+        window.openDetail = (id) => {
+            // 從 DB 獲取，若無則抓 Demo
             onSnapshot(doc(db, "shops", id), (snap) => {
-                const data = snap.data();
+                const data = snap.exists() ? snap.data() : demoShops[id];
                 document.getElementById('detail-name').innerText = data.name;
                 document.getElementById('detail-services').innerText = data.services;
                 document.getElementById('detail-products').innerText = data.products;
                 document.getElementById('detail-packages').innerText = data.packages;
-                document.getElementById('booking-btn').href = data.url || "#";
-                
+                document.getElementById('booking-btn').href = data.url;
                 const imgBox = document.getElementById('detail-images');
-                imgBox.innerHTML = data.photos.filter(u => u).map(u => `<img src="${u}" class="w-72 h-48 rounded-[2.5rem] object-cover flex-shrink-0 shadow-sm">`).join('');
-                
+                imgBox.innerHTML = data.photos.filter(u => u).map(u => `<img src="${u}" class="w-72 h-48 rounded-[2.5rem] object-cover flex-shrink-0 shadow-sm border">`).join('');
                 navigateTo('page-shop-detail');
             });
         };
 
-        // 管理登入
         window.authAdmin = () => {
             const code = document.getElementById('admin-code').value;
-            if(['001', '002', '003', '0000'].includes(code)) {
-                currentAdminShopId = (code === '0000') ? '001' : code;
+            if(demoShops[code] || code === "0000") {
+                currentAdminShopId = code === "0000" ? "001" : code;
                 document.getElementById('admin-login').classList.add('hidden');
                 document.getElementById('admin-editor').classList.remove('hidden');
-                onSnapshot(doc(db, "shops", currentAdminShopId), (snap) => {
-                    const d = snap.data(); if(!d) return;
-                    const ins = document.querySelectorAll('.url-in');
-                    d.photos.forEach((u, i) => ins[i].value = u);
-                    document.getElementById('in-services').value = d.services;
-                    document.getElementById('in-products').value = d.products;
-                    document.getElementById('in-packages').value = d.packages;
-                });
-            } else alert("無效代碼");
+                const d = demoShops[currentAdminShopId];
+                const ins = document.querySelectorAll('.url-in');
+                d.photos.forEach((u, i) => ins[i].value = u);
+                document.getElementById('in-services').value = d.services;
+                document.getElementById('in-products').value = d.products;
+                document.getElementById('in-packages').value = d.packages;
+            } else alert("請輸入 001 或 002");
         };
 
         window.saveAdminData = async () => {
@@ -239,11 +247,11 @@
                 services: document.getElementById('in-services').value,
                 products: document.getElementById('in-products').value,
                 packages: document.getElementById('in-packages').value,
-                name: currentAdminShopId === '001' ? "Holy Hair Salon" : "靜謐 SPA 會館",
-                url: "https://example.com"
+                name: demoShops[currentAdminShopId].name,
+                url: demoShops[currentAdminShopId].url
             };
             await setDoc(doc(db, "shops", currentAdminShopId), data, { merge: true });
-            alert("門面已更新！");
+            alert("更新成功！");
         };
     </script>
 </body>
